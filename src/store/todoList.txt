@@ -1,0 +1,7 @@
+- use web sockets
+- use http interceptor
+- use Oauth
+- use your own auth
+- module federation
+- message queues
+- redis
