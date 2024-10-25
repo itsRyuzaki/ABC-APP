@@ -5,3 +5,7 @@
 - module federation
 - message queues
 - redis
+- PWA
+- microservices
+- b2c/b2e
+- graphql
