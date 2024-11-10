@@ -1,15 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { postData } from "./../services/accessories-service";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",
-  (userCreds) => {
-    return {};
+  async () => {
+    const response = await postData("/user/validate", {
+      userName: "21",
+      password: "asd",
+    });
+    return response;
   }
 );
 const initialState = {
   isLoggedIn: false,
   allowedModulesAccess: [],
-  userApiResolved: false,
+  areCredsValidated: false,
   userData: null,
 };
 
@@ -24,12 +29,12 @@ const AuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(validateUserCredentials.pending, (state, action) => {
-      state.userApiResolved = false;
+      state.areCredsValidated = false;
       state.isLoggedIn = false;
     }),
       builder.addCase(validateUserCredentials.fulfilled, (state, action) => {
         state.isLoggedIn = true;
-        state.userApiResolved = true;
+        state.areCredsValidated = true;
         state.userData = action.payload;
       });
   },

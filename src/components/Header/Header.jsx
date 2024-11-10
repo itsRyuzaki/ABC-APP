@@ -4,8 +4,10 @@ import { ROUTER_CONSTANTS } from "./../../config/router-constants";
 import Button from "../../shared/Button/Button";
 import logoImg from "./../../assets/logo.jpg";
 import "./Header.css";
+import { useSelector } from "react-redux";
 
 export default function Header() {
+  const { authData } = useSelector((state) => state.authorization);
   return (
     <>
       <header id="main-header">
@@ -21,9 +23,24 @@ export default function Header() {
           </Button>
           <Button variation={BUTTON_VARIATIONS.textOnly}>
             <NavLink to={ROUTER_CONSTANTS.computersAndLaptops}>
-              Computers & Laptops
+              PCs & Laptops
             </NavLink>
           </Button>
+
+          {authData?.isLoggedIn ? (
+            <Button variation={BUTTON_VARIATIONS.textOnly}>
+              <NavLink to={ROUTER_CONSTANTS.profile}>
+                {authData?.firstName}
+              </NavLink>
+            </Button>
+          ) : (
+            <Button
+              variation={BUTTON_VARIATIONS.textOnly}
+              disabled={authData?.areCredsValidated}
+            >
+              Login/Sign Up
+            </Button>
+          )}
         </nav>
       </header>
     </>

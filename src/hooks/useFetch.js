@@ -9,11 +9,11 @@ export function useFetch(endpoint, payload, dependencies = []) {
   });
 
   useEffect(() => {
-    async function setData() {
+    async function getData() {
       const response = await fetchData(endpoint);
       setResponse(response);
     }
-    setData();
+    getData();
   }, dependencies);
 
   return {

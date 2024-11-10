@@ -1,17 +1,44 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { validateUserCredentials } from "./store/AuthSlice";
+import { useEffect, useState } from "react";
+
+let loaded = false;
 
 function App() {
-  // useEffect(() => {
-  //   fetch("http://localhost:3000/meals")
-  //     .then((res) => res.json())
-  //     .then(console.log);
-  // }, []);
+  const [showAvatarTransition, setshowAvatarTransition] = useState(true);
 
+  const dispatch = useDispatch();
+
+  const areCredsValidated = useSelector(
+    (state) => state.authorization.areCredsValidated
+  );
+
+  useEffect(() => {
+    if (areCredsValidated) {
+      setTimeout(() => {
+        setshowAvatarTransition(false);
+      }, 5000);
+    }
+  }, [areCredsValidated]);
+
+  if (!loaded) {
+    dispatch(validateUserCredentials());
+    loaded = true;
+  }
   return (
     <>
       <Header />
-      <Outlet />
+      {areCredsValidated ? (
+        showAvatarTransition ? (
+          <p>transition in progress</p>
+        ) : (
+          <Outlet />
+        )
+      ) : (
+        <p>Validating Credentials...</p>
+      )}
     </>
   );
 }
