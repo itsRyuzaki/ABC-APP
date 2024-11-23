@@ -1,4 +1,4 @@
-import { BUTTON_VARIATIONS } from "./../../config/variation";
+import { BUTTON_VARIATIONS } from "../../config/variation";
 import "./Button.css";
 
 const variationToClassMap = {

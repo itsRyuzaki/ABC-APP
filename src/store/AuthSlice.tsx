@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { postData } from "./../services/accessories-service";
+import { postData } from "../services/accessories-service";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",

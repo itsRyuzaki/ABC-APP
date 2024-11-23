@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { BUTTON_VARIATIONS } from "../../config/variation";
-import { ROUTER_CONSTANTS } from "./../../config/router-constants";
+import { ROUTER_CONSTANTS } from "../../config/router-constants";
 import Button from "../../shared/Button/Button";
 import logoImg from "./../../assets/logo.jpg";
 import "./Header.css";
