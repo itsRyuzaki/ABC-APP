@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../services/accessories-service";
+import { ApiResponse } from "../interfaces/IApiResponse";
 
-export function useFetch(endpoint, payload, dependencies = []) {
-  const [response, setResponse] = useState({
+export function useFetch<T, R>(endpoint: string, payload: T, dependencies: any[] = []) {
+  const [response, setResponse] = useState<ApiResponse<R>>({
     data: null,
     isLoading: true,
     hasError: false,
@@ -10,7 +11,7 @@ export function useFetch(endpoint, payload, dependencies = []) {
 
   useEffect(() => {
     async function getData() {
-      const response = await fetchData(endpoint);
+      const response: ApiResponse<R> = await fetchData(endpoint);
       setResponse(response);
     }
     getData();

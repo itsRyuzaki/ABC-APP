@@ -1,20 +1,20 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header/Header";
-import { useDispatch, useSelector } from "react-redux";
 import { validateUserCredentials } from "./store/AuthSlice";
 import { useEffect, useState } from "react";
 import { Spinner } from "./shared/Spinner/Spinner";
 import logoImg from "./assets/logo.jpg";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "./store/store-hooks";
 
 let loaded = false;
 
 function App() {
   const [showAvatarTransition, setshowAvatarTransition] = useState(true);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const areCredsValidated = useSelector(
+  const areCredsValidated = useAppSelector(
     (state) => state.authorization.areCredsValidated
   );
 

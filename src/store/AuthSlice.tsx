@@ -1,17 +1,30 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { postData } from "../services/accessories-service";
+import { ApiResponse } from "../interfaces/IApiResponse";
+import { IUserApiPayload, IUserData } from "../interfaces/IApiModels";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",
   async () => {
-    const response = await postData("/user/validate", {
-      userName: "21",
-      password: "asd",
-    });
+    const response = await postData<IUserApiPayload, IUserData>(
+      "/user/validate",
+      {
+        userName: "21",
+        password: "asd",
+      }
+    );
     return response;
   }
 );
-const initialState = {
+
+interface IAuthState {
+  isLoggedIn: boolean;
+  allowedModulesAccess: never[];
+  areCredsValidated: boolean;
+  userData: ApiResponse<IUserData> | null;
+}
+
+const initialState: IAuthState = {
   isLoggedIn: false,
   allowedModulesAccess: [],
   areCredsValidated: false,
@@ -22,7 +35,7 @@ const AuthSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    userLogout: (state, action) => {
+    userLogout: (state) => {
       state.isLoggedIn = false;
       state.userData = null;
     },
@@ -32,11 +45,14 @@ const AuthSlice = createSlice({
       state.areCredsValidated = false;
       state.isLoggedIn = false;
     }),
-      builder.addCase(validateUserCredentials.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
-        state.areCredsValidated = true;
-        state.userData = action.payload;
-      });
+      builder.addCase(
+        validateUserCredentials.fulfilled,
+        (state, action: PayloadAction<ApiResponse<IUserData>>) => {
+          state.isLoggedIn = true;
+          state.areCredsValidated = true;
+          state.userData = action.payload;
+        }
+      );
   },
 });
 

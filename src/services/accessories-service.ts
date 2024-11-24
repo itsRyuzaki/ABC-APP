@@ -1,38 +1,39 @@
 import { BASE_PATH } from "../config/endpoints";
 import axiosInstance from "../interceptors/http-interceptor";
+import { RawApiResponse } from "../interfaces/IApiResponse";
 
-export async function fetchData(endpoint) {
+export async function fetchData<R>(endpoint: string) {
   try {
     const rawResponse = await fetch([BASE_PATH, endpoint].join("/"));
     const data = await rawResponse.json();
-    return validateResponse(data);
+    return validateResponse<R>(data);
   } catch (error) {
-    handleErrorResponse(endpoint, error);
+    return handleErrorResponse(endpoint, error);
   }
 }
 
-export async function postData(endpoint, payload) {
+export async function postData<P, R>(endpoint: string, payload: P) {
   try {
     const response = await axiosInstance.post(endpoint, payload);
-    return validateResponse(response);
+    return validateResponse<R>(response.data);
   } catch (error) {
-    handleErrorResponse(endpoint, error);
+    return handleErrorResponse(endpoint, error);
   }
 }
 
-function validateResponse(data) {
-  if (data?.success) {
-    return { data, hasError: false, isLoading: false };
+function validateResponse<T>(response: RawApiResponse<T>) {
+  if (response?.success) {
+    return { data: response.data, hasError: false, isLoading: false };
   } else {
     throw new Error(
       `Error occured while fetching data: ${
-        data?.errorDetails ?? "Unknown Error"
+        response?.errorDetails ?? "Unknown Error"
       }`
     );
   }
 }
 
-function handleErrorResponse(endpoint, error) {
+function handleErrorResponse(endpoint: string, error: any) {
   console.error(`FETCH DATA - ${endpoint}`);
   console.error(error);
   return { data: null, hasError: true, isLoading: false };

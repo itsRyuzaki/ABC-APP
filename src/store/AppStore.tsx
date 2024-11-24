@@ -6,3 +6,7 @@ export const AppStore = configureStore({
     authorization: AuthSliceReducer,
   },
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof AppStore.getState>;
+export type AppDispatch = typeof AppStore.dispatch;
