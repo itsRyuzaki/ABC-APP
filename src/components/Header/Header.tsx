@@ -4,10 +4,22 @@ import { ROUTER_CONSTANTS } from "../../config/router-constants";
 import Button from "../../shared/Button/Button";
 import logoImg from "./../../assets/logo.jpg";
 import "./Header.css";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store/store-hooks";
+import { MutableRefObject, useRef, } from "react";
+import Modal from "../Modal/Modal";
 
 export default function Header() {
-  const { authData } = useSelector((state) => state.authorization);
+  const { userData, isLoggedIn, areCredsValidated } = useAppSelector(
+    (state) => state.authorization
+  );
+
+  const authModalRef =
+    useRef<HTMLDialogElement>() as MutableRefObject<HTMLDialogElement>;
+
+  const onloginClick = () => {
+    authModalRef.current.showModal();
+  };
+
   return (
     <>
       <header id="main-header">
@@ -27,22 +39,25 @@ export default function Header() {
             </NavLink>
           </Button>
 
-          {authData?.isLoggedIn ? (
+          {!isLoggedIn ? (
             <Button variation={BUTTON_VARIATIONS.textOnly}>
               <NavLink to={ROUTER_CONSTANTS.profile}>
-                {authData?.firstName}
+                {userData?.data?.firstName}
               </NavLink>
             </Button>
           ) : (
             <Button
               variation={BUTTON_VARIATIONS.textOnly}
-              disabled={authData?.areCredsValidated}
+              disabled={!areCredsValidated}
+              type="submit"
+              onClick={onloginClick}
             >
               Login/Sign Up
             </Button>
           )}
         </nav>
       </header>
+      <Modal ref={authModalRef}>Working</Modal>
     </>
   );
 }

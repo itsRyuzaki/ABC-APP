@@ -27,3 +27,8 @@
 .text-button:active {
   color: #ffab04;
 }
+
+.text-button:disabled{
+  color: #A59D84;
+  cursor: default;
+}
