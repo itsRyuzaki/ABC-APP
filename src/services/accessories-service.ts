@@ -1,6 +1,6 @@
 import { BASE_PATH } from "../config/endpoints";
 import axiosInstance from "../interceptors/http-interceptor";
-import { RawApiResponse } from "../interfaces/IApiResponse";
+import { ApiResponse, RawApiResponse } from "../interfaces/IApiResponse";
 
 export async function fetchData<R>(endpoint: string) {
   try {
@@ -12,7 +12,10 @@ export async function fetchData<R>(endpoint: string) {
   }
 }
 
-export async function postData<P, R>(endpoint: string, payload: P) {
+export async function postData<P, R>(
+  endpoint: string,
+  payload: P
+): Promise<ApiResponse<R>> {
   try {
     const response = await axiosInstance.post(endpoint, payload);
     return validateResponse<R>(response.data);

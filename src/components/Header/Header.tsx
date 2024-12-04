@@ -5,8 +5,9 @@ import Button from "../../shared/Button/Button";
 import logoImg from "./../../assets/logo.jpg";
 import "./Header.css";
 import { useAppSelector } from "../../store/store-hooks";
-import { MutableRefObject, useRef, } from "react";
+import { MutableRefObject, useRef } from "react";
 import Modal from "../Modal/Modal";
+import AuthForm from "../AuthForm/AuthForm";
 
 export default function Header() {
   const { userData, isLoggedIn, areCredsValidated } = useAppSelector(
@@ -49,7 +50,6 @@ export default function Header() {
             <Button
               variation={BUTTON_VARIATIONS.textOnly}
               disabled={!areCredsValidated}
-              type="submit"
               onClick={onloginClick}
             >
               Login/Sign Up
@@ -57,7 +57,9 @@ export default function Header() {
           )}
         </nav>
       </header>
-      <Modal ref={authModalRef}>Working</Modal>
+      <Modal ref={authModalRef}>
+        <AuthForm />
+      </Modal>
     </>
   );
 }

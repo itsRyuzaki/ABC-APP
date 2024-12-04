@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { postData } from "../services/accessories-service";
+import { ApiResponse } from "../interfaces/IApiResponse";
 
-export function usePost(endpoint, payload, dependencies = []) {
-  const [response, setResponse] = useState({
+export function usePost<P, R>(endpoint: string, payload: P, dependencies = []) {
+  const [response, setResponse] = useState<ApiResponse<R>>({
     data: null,
     isLoading: false,
     hasError: false,
@@ -10,7 +11,7 @@ export function usePost(endpoint, payload, dependencies = []) {
 
   useEffect(() => {
     async function callPostApi() {
-      const response = await postData(endpoint, payload);
+      const response = await postData<P, R>(endpoint, payload);
       setResponse(response);
     }
 

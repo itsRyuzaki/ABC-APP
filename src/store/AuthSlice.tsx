@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { postData } from "../services/accessories-service";
 import { ApiResponse } from "../interfaces/IApiResponse";
-import { IUserApiPayload, IUserData } from "../interfaces/IApiModels";
+import { IUserLoginPayload, IUserData } from "../interfaces/IApiModels";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",
   async () => {
-    const response = await postData<IUserApiPayload, IUserData>(
+    const response = await postData<IUserLoginPayload, IUserData>(
       "/user/validate",
       {
         userName: "21",

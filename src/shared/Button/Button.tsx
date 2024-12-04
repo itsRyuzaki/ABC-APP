@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FC,  ReactNode } from "react";
+import { ButtonHTMLAttributes, FC, ReactNode } from "react";
 import { BUTTON_VARIATIONS } from "../../config/variation";
 import "./Button.css";
 
@@ -9,19 +9,16 @@ const variationToClassMap = {
 
 interface IButtonComponent {
   children: ReactNode;
-  variation: string;
+  variation?: string;
   classOverrides?: string[];
 }
 
-const Button: FC<IButtonComponent & ButtonHTMLAttributes<HTMLButtonElement>> = ({
-  children,
-  variation,
-  classOverrides,
-  ...props
-}) => {
+const Button: FC<
+  IButtonComponent & ButtonHTMLAttributes<HTMLButtonElement>
+> = ({ children, variation, classOverrides, ...props }) => {
   const classes = [
-    variationToClassMap[variation] ??
-      variationToClassMap[BUTTON_VARIATIONS.default],
+    variationToClassMap[variation ?? BUTTON_VARIATIONS.default] ??
+    variationToClassMap[BUTTON_VARIATIONS.default],
     ...(classOverrides ?? []),
   ].join(" ");
 

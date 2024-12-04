@@ -4,7 +4,15 @@ export interface IUserData {
   imgSrc: string;
 }
 
-export interface IUserApiPayload {
+export interface IUserLoginPayload {
   userName: string;
   password: string;
+}
+
+export interface IUserSignUpPayload {
+  userName: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  emailId: string;
 }
