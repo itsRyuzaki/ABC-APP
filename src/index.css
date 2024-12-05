@@ -158,19 +158,17 @@ a {
 .validation-container {
   display: flex;
   align-items: center;
-  gap: 32px;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.validation-spinner .validation-avatar {
-  /* considering 8px border and 8px padding */
-  width: 168px;
-  position: relative;
-  top: -184px;
-  left: 16px;
+.avatar-img {
+  width: 200px;
   border-radius: 50%;
 }
 
-.validation-container .validation-msg {
-  position: relative;
-  top: -92px;
+.validation-img {
+  width: 100%;
+  border-radius: 50%;
+  padding: 12px;
 }

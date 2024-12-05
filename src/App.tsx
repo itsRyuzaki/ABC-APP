@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/Header/Header";
 import { validateUserCredentials } from "./store/AuthSlice";
 import { useEffect, useState } from "react";
-import { Spinner } from "./shared/Spinner/Spinner";
+import Spinner from "./shared/Spinner/Spinner";
 import logoImg from "./assets/logo.jpg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "./store/store-hooks";
@@ -33,31 +33,40 @@ function App() {
   return (
     <>
       <Header />
-      {areCredsValidated ? (
-        <AnimatePresence>
-          {showAvatarTransition ? (
+      <AnimatePresence>
+        {areCredsValidated ? (
+          showAvatarTransition ? (
             <motion.div
               className="validation-container"
+              style={{ width: "200px", height: "200px", margin: "auto" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className="validation-spinner">
-                <Spinner divStyle={{ width: "200px", height: "200px" }} />
-                <img className="validation-avatar" src={logoImg} />
-              </div>
+              <img className="validation-img" src={logoImg} />
 
-              <p className="validation-msg">
-                Just a moment! Validating your saved credentials
-              </p>
+              <p>Welcome back!</p>
             </motion.div>
           ) : (
             <Outlet />
-          )}
-        </AnimatePresence>
-      ) : (
-        <p>Validating Credentials...</p>
-      )}
+          )
+        ) : (
+          <motion.div
+            className="validation-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="validation-spinner">
+              <Spinner divStyle={{ width: "200px", height: "200px" }}>
+                <img className="validation-img" src={logoImg} />
+              </Spinner>
+            </div>
+
+            <p>Just a moment! Validating your saved credentials</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
