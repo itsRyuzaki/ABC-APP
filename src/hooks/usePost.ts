@@ -12,7 +12,11 @@ export function usePost<P, R>(endpoint: string, payload: P, dependencies = []) {
   useEffect(() => {
     async function callPostApi() {
       const response = await postData<P, R>(endpoint, payload);
-      setResponse(response);
+      setResponse({
+        data: response.data,
+        isLoading: false,
+        hasError: !response.success
+      });
     }
 
     callPostApi();

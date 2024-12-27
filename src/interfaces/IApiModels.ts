@@ -1,7 +1,7 @@
 export interface IUserData {
   firstName: string;
-  lastName: string;
-  imgSrc: string;
+  avatarUrl: string;
+  accessibleModules: string[];
 }
 
 export interface IUserLoginPayload {

@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "./store/store-hooks";
 let loaded = false;
 
 function App() {
-  const [showAvatarTransition, setshowAvatarTransition] = useState(true);
+  const [showAvatarTransition, setShowAvatarTransition] = useState(true);
 
   const dispatch = useAppDispatch();
 
@@ -18,10 +18,12 @@ function App() {
     (state) => state.authorization.areCredsValidated
   );
 
+  const userData = useAppSelector((state) => state.authorization.userData);
+
   useEffect(() => {
     if (areCredsValidated) {
       setTimeout(() => {
-        setshowAvatarTransition(false);
+        setShowAvatarTransition(false);
       }, 5000);
     }
   }, [areCredsValidated]);
@@ -43,9 +45,12 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <img className="validation-img" src={logoImg} />
+              <img
+                className="validation-img"
+                src={userData?.avatarUrl ?? logoImg}
+              />
 
-              <p>Welcome back!</p>
+              <p>Welcome back, {userData?.firstName ?? ""}! </p>
             </motion.div>
           ) : (
             <Outlet />

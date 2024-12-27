@@ -5,8 +5,8 @@ export type ApiResponse<T> = {
 };
 
 export type RawApiResponse<T> = {
-    data: T;
+    data: T | null;
     success: boolean;
-    errorDetails: string[];
+    errorDetails?: string[];
 }
 

@@ -1,18 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { postData } from "../services/accessories-service";
-import { ApiResponse } from "../interfaces/IApiResponse";
-import { IUserLoginPayload, IUserData } from "../interfaces/IApiModels";
+import { fetchData } from "../services/accessories-service";
+import { RawApiResponse } from "../interfaces/IApiResponse";
+import { IUserData } from "../interfaces/IApiModels";
+import { ENDPOINTS } from "../config/endpoints";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",
   async () => {
-    const response = await postData<IUserLoginPayload, IUserData>(
-      "/user/validate",
-      {
-        userName: "21",
-        password: "asd",
-      }
-    );
+    const response = await fetchData<IUserData>(ENDPOINTS.validateCreds);
     return response;
   }
 );
@@ -21,7 +16,7 @@ interface IAuthState {
   isLoggedIn: boolean;
   allowedModulesAccess: never[];
   areCredsValidated: boolean;
-  userData: ApiResponse<IUserData> | null;
+  userData: IUserData | null;
 }
 
 const initialState: IAuthState = {
@@ -47,10 +42,10 @@ const AuthSlice = createSlice({
     }),
       builder.addCase(
         validateUserCredentials.fulfilled,
-        (state, action: PayloadAction<ApiResponse<IUserData>>) => {
+        (state, action: PayloadAction<RawApiResponse<IUserData>>) => {
           state.isLoggedIn = true;
           state.areCredsValidated = true;
-          state.userData = action.payload;
+          state.userData = action.payload.data;
         }
       );
   },
