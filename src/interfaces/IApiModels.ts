@@ -16,3 +16,11 @@ export interface IUserSignUpPayload {
   lastName: string;
   emailId: string;
 }
+
+export interface IItemsList {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  imageURLs: string[];
+}

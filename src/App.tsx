@@ -14,17 +14,15 @@ function App() {
 
   const dispatch = useAppDispatch();
 
-  const areCredsValidated = useAppSelector(
-    (state) => state.authorization.areCredsValidated
+  const { userData, isLoggedIn, areCredsValidated } = useAppSelector(
+    (state) => state.authorization
   );
-
-  const userData = useAppSelector((state) => state.authorization.userData);
 
   useEffect(() => {
     if (areCredsValidated) {
       setTimeout(() => {
         setShowAvatarTransition(false);
-      }, 5000);
+      }, 2000);
     }
   }, [areCredsValidated]);
 
@@ -32,6 +30,7 @@ function App() {
     dispatch(validateUserCredentials());
     loaded = true;
   }
+  
   return (
     <>
       <Header />
@@ -49,8 +48,13 @@ function App() {
                 className="validation-img"
                 src={userData?.avatarUrl ?? logoImg}
               />
-
-              <p>Welcome back, {userData?.firstName ?? ""}! </p>
+              {isLoggedIn ? (
+                <p>Welcome back, {userData?.firstName ?? ""}! </p>
+              ) : (
+                <p>
+                  No Credentials found! Browse anonymously or click login above.
+                </p>
+              )}
             </motion.div>
           ) : (
             <Outlet />

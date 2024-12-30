@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3rem 10%;
+  padding: 3rem 4%;
 }
 
 #main-header #title {
@@ -16,10 +16,18 @@
   height: 4rem;
   object-fit: contain;
   border-radius: 50%;
-  border: 2px solid #ffc404;
+  border: 2px solid var( --abc-title-color);
 }
 
 #main-header button {
   font-size: 1.5rem;
-  font-family: "Lato", sans-serif;
 }
+
+.gradient-text {
+  background: linear-gradient(to right, #ffca18 0%, #fd9a57 5%, #fd7ca2 15%, #a182ae 40%, #32cbea 60%, #ffca18 100%);
+  background-size: 50%;
+  background-clip: text;
+  -webkit-background-clip: text; /* Clips the background to the text */
+  color: transparent; /* Makes the text color transparent so the gradient is visible */
+}
+

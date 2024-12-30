@@ -14,7 +14,7 @@ export const validateUserCredentials = createAsyncThunk(
 
 interface IAuthState {
   isLoggedIn: boolean;
-  allowedModulesAccess: never[];
+  allowedModulesAccess: string[];
   areCredsValidated: boolean;
   userData: IUserData | null;
 }
@@ -34,16 +34,21 @@ const AuthSlice = createSlice({
       state.isLoggedIn = false;
       state.userData = null;
     },
+    userLogin: (state, action: PayloadAction<RawApiResponse<IUserData>>) => {
+      state.isLoggedIn = true;
+      state.userData = action.payload.data;
+      state.allowedModulesAccess = action.payload.data?.accessibleModules ?? [];
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(validateUserCredentials.pending, (state, action) => {
+    builder.addCase(validateUserCredentials.pending, (state) => {
       state.areCredsValidated = false;
       state.isLoggedIn = false;
     }),
       builder.addCase(
         validateUserCredentials.fulfilled,
         (state, action: PayloadAction<RawApiResponse<IUserData>>) => {
-          state.isLoggedIn = true;
+          state.isLoggedIn = action.payload.success;
           state.areCredsValidated = true;
           state.userData = action.payload.data;
         }
@@ -51,5 +56,5 @@ const AuthSlice = createSlice({
   },
 });
 
-export const { userLogout } = AuthSlice.actions;
+export const { userLogout, userLogin } = AuthSlice.actions;
 export default AuthSlice.reducer;

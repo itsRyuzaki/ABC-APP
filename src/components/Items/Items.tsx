@@ -1,14 +1,20 @@
 import "./Items.css";
 import { BASE_PATH } from "../../config/endpoints";
-import Button from "../Button/Button";
+import Button from "../../shared/Button/Button";
+import { IItemsList } from "../../interfaces/IApiModels";
+import { FC } from "react";
 
-export default function Items({ itemList }) {
+interface IItemsComponent {
+  itemList: IItemsList[];
+}
+
+const Items: FC<IItemsComponent> = ({ itemList }) => {
   return (
     <ul className="items-wrapper">
-      {itemList?.map((data) => (
+      {itemList.map((data) => (
         <li key={data.id} className="item">
           <article>
-            <img src={`${BASE_PATH}/${data.image}`} alt={data.name} />
+            <img src={`${BASE_PATH}/${data.imageURLs[0]}`} alt={data.name} />
             <div>
               <h3>{data.name}</h3>
               <p className="item-price">{data.price}</p>
@@ -22,4 +28,6 @@ export default function Items({ itemList }) {
       ))}
     </ul>
   );
-}
+};
+
+export default Items;

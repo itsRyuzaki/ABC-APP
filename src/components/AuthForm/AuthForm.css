@@ -1,0 +1,7 @@
+.form-background {
+    background-color: var(--abc-secondary-color);
+}
+
+form input {
+    width: 20rem !important;
+}

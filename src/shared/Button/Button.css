@@ -2,10 +2,9 @@
   font: inherit;
   cursor: pointer;
   background-color: #ffc404;
-  border: 1px solid #ffc404;
   color: #1f1a09;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .button:hover,
@@ -20,7 +19,7 @@
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: #ffc404;
+  color: var(--abc-title-color);
 }
 
 .text-button:hover,
@@ -28,7 +27,7 @@
   color: #ffab04;
 }
 
-.text-button:disabled{
-  color: #A59D84;
+.text-button:disabled {
+  color: #a59d84;
   cursor: default;
 }

@@ -43,7 +43,7 @@
 .item-price {
   display: inline-block;
   background-color: #312c1d;
-  color: #ffc404;
+  color: var( --abc-title-color);
   font-size: 0.9rem;
   font-weight: bold;
   padding: 0.5rem 2rem;

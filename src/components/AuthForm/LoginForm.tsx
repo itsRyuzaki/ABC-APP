@@ -1,36 +1,47 @@
 import { FC, FormEvent, MouseEventHandler, useRef } from "react";
 import Input from "../../shared/Input/Input";
 import { postData } from "../../services/accessories-service";
-import { ApiResponse } from "../../interfaces/IApiResponse";
 import { IUserLoginPayload, IUserData } from "../../interfaces/IApiModels";
 import { ENDPOINTS } from "../../config/endpoints";
+import { useAppDispatch } from "../../store/store-hooks";
+import { userLogin } from "../../store/AuthSlice";
 
 interface ILoginFormComponent {
   signInClick: MouseEventHandler;
+  closeModal: () => void;
 }
 
-const LoginForm: FC<ILoginFormComponent> = ({ signInClick }) => {
+const LoginForm: FC<ILoginFormComponent> = ({ signInClick, closeModal }) => {
   const formRef = useRef<HTMLFormElement>(null);
+
+  const dispatch = useAppDispatch();
 
   const handleLoginClick = async (event: FormEvent) => {
     event.preventDefault();
     const formData = Object.fromEntries(
       new FormData(formRef.current as HTMLFormElement).entries()
     );
-    const response = await postData<IUserLoginPayload, ApiResponse<IUserData>>(
+    const response = await postData<IUserLoginPayload, IUserData>(
       ENDPOINTS.userLogin,
       {
         userName: formData.userName as string,
         password: formData.password as string,
       }
     );
-    console.log(response);
+    if (response.success) {
+      dispatch(userLogin(response));
+      closeModal();
+    }
   };
 
   return (
     <>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" ref={formRef} onSubmit={handleLoginClick}>
+        <form
+          className="space-y-6 form-background"
+          ref={formRef}
+          onSubmit={handleLoginClick}
+        >
           {/* User Name */}
           <Input id="userName" label="User Name" type="text" required />
 
