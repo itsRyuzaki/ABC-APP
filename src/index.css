@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  --abc-primary-color: #191825;
+  --abc-primary-color: black;
   --abc-secondary-color: #F1F1F1;
   --abc-title-color: #e384ff;
   --abc-txt-color: #ffa3fd;
@@ -21,6 +21,7 @@
 
 body {
   margin: 0;
+  padding: 3rem;
   font-family: "Kalam", serif;
   background: var(--abc-primary-color);
   color: var(--abc-txt-color);
