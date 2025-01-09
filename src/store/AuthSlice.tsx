@@ -3,6 +3,7 @@ import { fetchData } from "../services/accessories-service";
 import { RawApiResponse } from "../interfaces/IApiResponse";
 import { IUserData } from "../interfaces/IApiModels";
 import { ENDPOINTS } from "../config/endpoints";
+import { UserRole } from "../enums/UserRoleEnum";
 
 export const validateUserCredentials = createAsyncThunk(
   "auth/validateCredentials",
@@ -16,6 +17,7 @@ interface IAuthState {
   isLoggedIn: boolean;
   allowedModulesAccess: string[];
   areCredsValidated: boolean;
+  userRole: UserRole;
   userData: IUserData | null;
 }
 
@@ -23,6 +25,7 @@ const initialState: IAuthState = {
   isLoggedIn: false,
   allowedModulesAccess: [],
   areCredsValidated: false,
+  userRole: UserRole.anonymous,
   userData: null,
 };
 
@@ -51,6 +54,7 @@ const AuthSlice = createSlice({
           state.isLoggedIn = action.payload.success;
           state.areCredsValidated = true;
           state.userData = action.payload.data;
+          state.userRole = action.payload.data?.userRole ?? UserRole.anonymous;
         }
       );
   },
