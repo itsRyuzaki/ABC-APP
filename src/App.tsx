@@ -6,8 +6,15 @@ import Spinner from "./shared/Spinner/Spinner";
 import logoImg from "./assets/logo.jpg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "./store/store-hooks";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 let loaded = false;
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
   const [showAvatarTransition, setShowAvatarTransition] = useState(true);
@@ -30,52 +37,55 @@ function App() {
     dispatch(validateUserCredentials());
     loaded = true;
   }
-  
+
   return (
     <>
-      <Header />
-      <AnimatePresence>
-        {areCredsValidated ? (
-          showAvatarTransition ? (
+      <ThemeProvider theme={darkTheme}>
+        <Header />
+        <AnimatePresence>
+          {areCredsValidated ? (
+            showAvatarTransition ? (
+              <motion.div
+                className="validation-container"
+                style={{ width: "200px", height: "200px", margin: "auto" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <img
+                  className="validation-img"
+                  src={userData?.avatarUrl ?? logoImg}
+                />
+                {isLoggedIn ? (
+                  <p>Welcome back, {userData?.firstName ?? ""}! </p>
+                ) : (
+                  <p>
+                    No Credentials found! Browse anonymously or click login
+                    above.
+                  </p>
+                )}
+              </motion.div>
+            ) : (
+              <Outlet />
+            )
+          ) : (
             <motion.div
               className="validation-container"
-              style={{ width: "200px", height: "200px", margin: "auto" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <img
-                className="validation-img"
-                src={userData?.avatarUrl ?? logoImg}
-              />
-              {isLoggedIn ? (
-                <p>Welcome back, {userData?.firstName ?? ""}! </p>
-              ) : (
-                <p>
-                  No Credentials found! Browse anonymously or click login above.
-                </p>
-              )}
-            </motion.div>
-          ) : (
-            <Outlet />
-          )
-        ) : (
-          <motion.div
-            className="validation-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="validation-spinner">
-              <Spinner divStyle={{ width: "200px", height: "200px" }}>
-                <img className="validation-img" src={logoImg} />
-              </Spinner>
-            </div>
+              <div className="validation-spinner">
+                <Spinner divStyle={{ width: "200px", height: "200px" }}>
+                  <img className="validation-img" src={logoImg} />
+                </Spinner>
+              </div>
 
-            <p>Just a moment! Validating your saved credentials</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <p>Just a moment! Validating your saved credentials</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </ThemeProvider>
     </>
   );
 }
