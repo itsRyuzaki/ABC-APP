@@ -1,4 +1,4 @@
-import { FC, forwardRef, ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 

@@ -1,7 +1,10 @@
+import { UserRole } from "../enums/UserRoleEnum";
+
 export interface IUserData {
   firstName: string;
   avatarUrl: string;
   accessibleModules: string[];
+  userRole: UserRole;
 }
 
 export interface IUserLoginPayload {
@@ -17,10 +20,7 @@ export interface IUserSignUpPayload {
   emailId: string;
 }
 
-export interface IItemsList {
+export interface ISellerDetails {
   id: number;
   name: string;
-  description: string;
-  price: string;
-  imageURLs: string[];
 }

@@ -7,8 +7,8 @@ import anonymousImg from "./../../assets/anoymous-avatar.jpg";
 
 import "./Header.css";
 import { useAppSelector } from "../../store/store-hooks";
-import { MutableRefObject, useRef } from "react";
-import Modal from "../Modal/Modal";
+import { useRef } from "react";
+import Modal from "../../shared/Modal/Modal";
 import AuthForm from "../AuthForm/AuthForm";
 import { motion } from "framer-motion";
 
@@ -17,15 +17,14 @@ export default function Header() {
     (state) => state.authorization
   );
 
-  const authModalRef =
-    useRef<HTMLDialogElement>() as MutableRefObject<HTMLDialogElement>;
+  const authModalRef = useRef<HTMLDialogElement>(null);
 
   const onloginClick = () => {
-    authModalRef.current.showModal();
+    authModalRef.current?.showModal();
   };
 
   const closeModal = () => {
-    authModalRef.current.close();
+    authModalRef.current?.close();
   };
 
   return (

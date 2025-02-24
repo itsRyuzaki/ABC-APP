@@ -5,6 +5,7 @@ import { IUserLoginPayload, IUserData } from "../../interfaces/IApiModels";
 import { ENDPOINTS } from "../../config/endpoints";
 import { useAppDispatch } from "../../store/store-hooks";
 import { userLogin } from "../../store/AuthSlice";
+import { ExtractFormData } from "../../utils/formUtils";
 
 interface ILoginFormComponent {
   signInClick: MouseEventHandler;
@@ -16,21 +17,19 @@ const LoginForm: FC<ILoginFormComponent> = ({ signInClick, closeModal }) => {
 
   const dispatch = useAppDispatch();
 
-  const handleLoginClick = async (event: FormEvent) => {
+  const handleLoginClick = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = Object.fromEntries(
-      new FormData(formRef.current as HTMLFormElement).entries()
-    );
-    const response = await postData<IUserLoginPayload, IUserData>(
-      ENDPOINTS.userLogin,
-      {
-        userName: formData.userName as string,
-        password: formData.password as string,
+    if (formRef.current) {
+      const payload = ExtractFormData<IUserLoginPayload>(formRef.current);
+      const response = await postData<IUserLoginPayload, IUserData>(
+        ENDPOINTS.userLogin,
+        payload
+      );
+
+      if (response.success) {
+        dispatch(userLogin(response));
+        closeModal();
       }
-    );
-    if (response.success) {
-      dispatch(userLogin(response));
-      closeModal();
     }
   };
 
