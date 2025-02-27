@@ -1,16 +1,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap");
 @import "tailwindcss";
 
+@layer base {
+  h1 {
+    font-size: var(--text-4xl);
+  }
+  h2 {
+    font-size: var(--text-3xl);
+  }
+  h3 {
+    font-size: var(--text-2xl);
+  }
+  h4 {
+    font-size: var(--text-xl);
+  }
+}
+
 :root {
-  --abc-primary-color: black;
-  --abc-secondary-color: #F1F1F1;
-  --abc-title-color: #e384ff;
-  --abc-txt-color: #ffa3fd;
+  --abc-primary-color: #222831;
+  --abc-secondary-color: #EEEEEE;
+  --abc-tertiary-color: #393E46;
+  --abc-title-color: #00adb5;
+  --abc-txt-color: #F1F1F1;
   --abc-heading-color: #865dff;
 }
 
-.abc-sec-clr{
+.abc-sec-clr {
   color: var(--abc-secondary-color);
+}
+
+.abc-layout-clr {
+  background-color: var(--abc-tertiary-color);
 }
 
 * {
@@ -26,18 +46,6 @@ body {
   min-height: 100vh;
 }
 
-h1 {
-  font-weight: 700;
-  font-size: 2rem;
-  margin: 0;
-  color: var(--abc-heading-color);
-  letter-spacing: 0.2rem;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
 
 .cart h2 {
   margin: 1rem 0;
