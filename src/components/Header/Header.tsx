@@ -69,7 +69,7 @@ export default function Header() {
                 </NavLink>
               </Button>
             ) : (
-              <Button onClick={onloginClick}>Login/Sign Up</Button>
+              <Button onClick={onloginClick}>Sign In</Button>
             )
           ) : (
             <></>
