@@ -11,9 +11,12 @@ import { createTheme, ThemeProvider } from "@mui/material";
 let loaded = false;
 
 const darkTheme = createTheme({
-  
   palette: {
     mode: "dark",
+    background: {
+      default: "#222831",
+      paper: "#222831",
+    },
     primary: {
       main: "#00adb5",
       dark: "#06979c",
@@ -24,10 +27,9 @@ const darkTheme = createTheme({
       main: "#ffc404",
       dark: "#ffab04",
       light: "#ffab04",
-      contrastText: "#222831"
-    }
+      contrastText: "#222831",
+    },
   },
-
 });
 
 function App() {

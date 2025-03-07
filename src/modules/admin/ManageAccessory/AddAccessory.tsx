@@ -1,31 +1,17 @@
-import { Button, Divider, styled, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import BaseAccesoryForm from "./BaseAccessoryForm";
 import { FormEvent, FormEventHandler, useRef, useState } from "react";
 import VariantAccessoryForm from "./VariantAccessoryForm";
 import { IVariantState } from "../../../interfaces/IManageAccessory";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import AddIcon from "@mui/icons-material/Add";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { v4 as uuidv4 } from "uuid";
+import { IKeyValuePair } from "../../../interfaces/IApiModels";
+import { ExtractFormData } from "../../../utils/formUtils";
 
-interface IMasterAttribute {
-  key: string;
-  value: string[];
-}
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 
 const getInitialVariantState: () => IVariantState = () => ({
   isLoading: false,
@@ -36,9 +22,9 @@ const AddAccessory = () => {
   const baseRef = useRef<HTMLFormElement>(null);
   const variantRef = useRef<Record<string, HTMLFormElement>>({});
   const [variantStates, setVariantStates] = useState<IVariantState[]>([]);
-  const [masterAttributes, setMasterAttributes] = useState<IMasterAttribute[]>([
-    { key: "", value: [] },
-  ]);
+  const [masterAttributes, setMasterAttributes] = useState<
+    IKeyValuePair<string, string[]>[]
+  >([{ key: "", value: [], id: uuidv4() }]);
 
   const cardClasses =
     "card-wrapper p-8 shadow-lg shadow-gray-900 rounded-md abc-layout-clr mb-8";
@@ -63,6 +49,7 @@ const AddAccessory = () => {
     id: string
   ) => {
     event.preventDefault();
+    console.log(ExtractFormData<any>(variantRef.current[id]));
   };
 
   return (
@@ -70,40 +57,19 @@ const AddAccessory = () => {
       <h1 className="text-center">Add Accessory Details</h1>
       <h3>Base Details:</h3>
       <div className={cardClasses}>
-        <BaseAccesoryForm handleSubmit={handleBaseFormSubmit} ref={baseRef} />
-
-        <Divider className="mt-4!"/>
-
-        <h4 className="mt-4"> Master Attributes</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-          {masterAttributes.map((masterAttribute, index) => (
-            <div className="grid grid-cols-1 gap-4 shadow-lg shadow-gray-900 p-4">
-              <TextField
-                fullWidth
-                required
-                id={`MasterAttributeName${index}`}
-                label="Attribute Name"
-                variant="outlined"
-              />
-              <div>
-                <TextField
-                  fullWidth
-                  required
-                  id={`MasterAttributeValue${index}`}
-                  label="Value"
-                  variant="outlined"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <BaseAccesoryForm
+          handleSubmit={handleBaseFormSubmit}
+          ref={baseRef}
+          masterAttributes={masterAttributes}
+          setMasterAttributes={setMasterAttributes}
+        />
       </div>
 
       {variantStates.length ? <h3>Variants:</h3> : <></>}
 
       {variantStates.map((variant) => (
         <div key={variant.id} className={cardClasses}>
-          <div className="flex justify-end gap-2 mb-3">
+          <div className="flex justify-end gap-2 mb-4">
             <Button variant="contained" startIcon={<ContentCopyOutlinedIcon />}>
               Duplicate
             </Button>
@@ -126,26 +92,13 @@ const AddAccessory = () => {
             </Button>
           </div>
 
-          <Button
-            className="mb-4!"
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-          >
-            Upload Images
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(event) => console.log(event.target.files)}
-              multiple
-            />
-          </Button>
+          
           <VariantAccessoryForm
             ref={(el: HTMLFormElement) => {
               variantRef.current[variant.id] = el;
             }}
             handleSubmit={(event) => handleVariantFormSubmit(event, variant.id)}
+            masterAttributes={masterAttributes}
           />
         </div>
       ))}

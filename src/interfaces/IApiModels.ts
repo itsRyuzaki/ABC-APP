@@ -24,3 +24,10 @@ export interface ISellerDetails {
   id: number;
   name: string;
 }
+
+
+export interface IKeyValuePair<K,V> {
+  id?: string;
+  key: K;
+  value: V;
+}
