@@ -2,7 +2,10 @@ import { Button } from "@mui/material";
 import BaseAccesoryForm from "./BaseAccessoryForm";
 import { FormEvent, FormEventHandler, useRef, useState } from "react";
 import VariantAccessoryForm from "./VariantAccessoryForm";
-import { IVariantState } from "../../../interfaces/IManageAccessory";
+import {
+  IAccessoryVariantData,
+  IVariantState,
+} from "../../../interfaces/IManageAccessory";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,11 +14,12 @@ import { v4 as uuidv4 } from "uuid";
 import { IKeyValuePair } from "../../../interfaces/IApiModels";
 import { ExtractFormData } from "../../../utils/formUtils";
 
-
-
-const getInitialVariantState: () => IVariantState = () => ({
+const getInitialVariantState: (
+  data?: IAccessoryVariantData
+) => IVariantState = (data?: IAccessoryVariantData) => ({
   isLoading: false,
   id: uuidv4(),
+  initialData: data ?? null,
 });
 
 const AddAccessory = () => {
@@ -69,14 +73,29 @@ const AddAccessory = () => {
 
       {variantStates.map((variant) => (
         <div key={variant.id} className={cardClasses}>
-          <div className="flex justify-end gap-2 mb-4">
-            <Button variant="contained" startIcon={<ContentCopyOutlinedIcon />}>
+          <div className="flex justify-end gap-4 mb-8">
+            <Button
+              variant="contained"
+              startIcon={<ContentCopyOutlinedIcon />}
+              onClick={() =>
+                setVariantStates((prevStates) => {
+                  return [
+                    ...prevStates,
+                    getInitialVariantState(
+                      ExtractFormData<IAccessoryVariantData>(
+                        variantRef.current[variant.id]
+                      )
+                    ),
+                  ];
+                })
+              }
+            >
               Duplicate
             </Button>
 
             <Button
               disabled={variantStates.length === 1}
-              className="min-w-auto!"
+              className="min-w-auto! p-2!"
               color="error"
               aria-label="Delete"
               variant="contained"
@@ -92,13 +111,13 @@ const AddAccessory = () => {
             </Button>
           </div>
 
-          
           <VariantAccessoryForm
             ref={(el: HTMLFormElement) => {
               variantRef.current[variant.id] = el;
             }}
             handleSubmit={(event) => handleVariantFormSubmit(event, variant.id)}
             masterAttributes={masterAttributes}
+            initialData={variant.initialData}
           />
         </div>
       ))}

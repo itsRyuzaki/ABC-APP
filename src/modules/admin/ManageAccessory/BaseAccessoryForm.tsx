@@ -33,7 +33,7 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
   setMasterAttributes,
 }) => {
   const gridClass =
-    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4";
+    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4";
 
   const addAttributeValues = (
     masterAttribute: IKeyValuePair<string, string[]>,
@@ -119,11 +119,11 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
         {masterAttributes.map((masterAttribute, attrIndex) => (
           <div
             key={masterAttribute.id}
-            className="grid grid-cols-1 gap-4 shadow-lg shadow-gray-900 p-4 content-start"
+            className="grid grid-cols-1 gap-6 shadow-lg shadow-gray-900 p-4 content-start"
           >
             <Button
               disabled={masterAttributes.length === 1}
-              className="justify-self-end min-w-auto! size-fit"
+              className="justify-self-end min-w-auto! size-fit p-2!"
               color="error"
               variant="contained"
               onClick={() =>
