@@ -4,7 +4,9 @@ export const ENDPOINTS = {
   userLogin: "Users/login",
   userSignUp: "Users/signup",
   validateCreds: "Users/validate",
-
+  categories: "Accessories/categories",
+  brands: "Accessories/brands",
+  deviceModels: "Accessories/device-models",
 };
 
-export const BASE_PATH = "http://localhost:5112";
+export const BASE_PATH = "/api";
