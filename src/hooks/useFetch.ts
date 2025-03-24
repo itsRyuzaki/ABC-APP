@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { fetchData } from "../services/accessories-service";
 import { ApiResponse, RawApiResponse } from "../interfaces/IApiResponse";
 
-export function useFetch<T, R>(
+export function useFetch<R>(
   endpoint: string,
-  payload: T,
+  payload: Record<string, string> = {},
   dependencies: any[] = []
-) {
+): [ApiResponse<R>, Dispatch<SetStateAction<ApiResponse<R>>>] {
   const [response, setResponse] = useState<ApiResponse<R>>({
     data: null,
     isLoading: true,
@@ -15,7 +15,7 @@ export function useFetch<T, R>(
 
   useEffect(() => {
     async function getData() {
-      const response: RawApiResponse<R> = await fetchData<R>(endpoint);
+      const response: RawApiResponse<R> = await fetchData<R>(endpoint, payload);
       setResponse({
         data: response.data,
         isLoading: false,
@@ -25,7 +25,5 @@ export function useFetch<T, R>(
     getData();
   }, dependencies);
 
-  return {
-    response,
-  };
+  return [response, setResponse];
 }

@@ -4,9 +4,14 @@ export type ApiResponse<T> = {
   hasError: boolean;
 };
 
+export interface IErrorDetails {
+  code: number;
+  details: string[];
+}
+
 export type RawApiResponse<T> = {
     data: T | null;
     success: boolean;
-    errorDetails?: string[];
+    errorDetails?: IErrorDetails;
 }
 
