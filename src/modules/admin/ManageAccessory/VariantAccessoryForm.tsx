@@ -1,29 +1,10 @@
-import {
-  Autocomplete,
-  Button,
-  Icon,
-  IconButton,
-  styled,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Button, TextField } from "@mui/material";
 import { FC, FormEventHandler, Ref, useState } from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { IKeyValuePair } from "../../../interfaces/IApiModels";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { IAccessoryVariantData } from "../../../interfaces/IManageAccessory";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import FileUpload from "../../../shared/FileUpload/FileUpload";
+import { IFileConfig } from "../../../interfaces/IFileUpload";
 
 interface IVariantAccessoryForm {
   handleSubmit: FormEventHandler<HTMLFormElement>;
@@ -39,7 +20,7 @@ const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
   initialData,
 }) => {
   const [disabledAttributes, setDisabledAttributes] = useState<string[]>([]);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imageFiles, setImageFiles] = useState<IFileConfig[]>([]);
 
   const gridClass =
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
@@ -48,49 +29,15 @@ const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
     <>
       <form ref={ref} onSubmit={handleSubmit}>
         <div className={`${gridClass} mb-4`}>
-          {imageFiles.map((file) => (
-            <div
-              className="p-4 flex flex-col shadow-lg shadow-gray-900"
-              key={file.name}
-            >
-              <IconButton
-                className="min-w-auto! bottom-10 left-10 self-end"
-                color="error"
-                onClick={() =>
-                  setImageFiles((prevFiles) =>
-                    prevFiles.filter((prevFile) => prevFile.name !== file.name)
-                  )
-                }
-              >
-                <CancelIcon fontSize="large" />
-              </IconButton>
-              <img
-                src={URL.createObjectURL(file)}
-                alt={file.name}
-                className="object-contain h-64"
-              />
-            </div>
-          ))}
-          <Button
-            className="mb-4! col-start-1 size-fit"
-            variant="contained"
-            component="label"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-          >
-            Add Image
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(event) => {
-                const file = event.target.files?.item(0);
-                if (file) {
-                  setImageFiles((prevFile) => prevFile.concat([file]));
-                }
-              }}
-              name="files"
-              accept="image/*, video/*"
-            />
-          </Button>
+          <FileUpload
+            buttonClass="mb-4! col-start-1 size-fit"
+            label="Add Image"
+            controlName="files"
+            acceptedTypes={["image/*", "video/*"]}
+            files={imageFiles}
+            setFiles={setImageFiles}
+            maxLimit={6}
+          />
 
           <TextField
             name="description"

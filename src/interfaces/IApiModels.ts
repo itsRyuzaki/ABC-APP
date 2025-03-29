@@ -25,8 +25,34 @@ export interface ISellerDetails {
   name: string;
 }
 
+export interface IBaseImage {
+  altText: string;
+  source: string;
+  order: number;
+}
 
-export interface IKeyValuePair<K,V> {
+export interface ICategoryDetails extends IBaseImage  {
+  id: number;
+  name: string;
+  description: string;
+  guid: string;
+}
+
+export interface IBrandDetails extends IBaseImage {
+  id: number;
+  name: string;
+  guid: string;
+  officialSite: string;
+}
+
+export interface IDeviceModels extends IBaseImage {
+  id: number;
+  name: string;
+  description: string;
+  guid: string;
+}
+
+export interface IKeyValuePair<K, V> {
   id?: string;
   key: K;
   value: V;

@@ -9,13 +9,33 @@ import {
   OutlinedInput,
   Button,
   Chip,
+  createFilterOptions,
+  Dialog,
 } from "@mui/material";
-import { Dispatch, FC, FormEventHandler, Ref, SetStateAction } from "react";
-import { IKeyValuePair } from "../../../interfaces/IApiModels";
+import {
+  Dispatch,
+  FC,
+  FormEventHandler,
+  Ref,
+  SetStateAction,
+  useState,
+} from "react";
+import {
+  IBrandDetails,
+  ICategoryDetails,
+  IDeviceModels,
+  IKeyValuePair,
+} from "../../../interfaces/IApiModels";
+import CancelIcon from "@mui/icons-material/Cancel";
 import SendIcon from "@mui/icons-material/Send";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
+import { ENDPOINTS } from "../../../config/endpoints";
+import { useFetch } from "../../../hooks/useFetch";
+import { useParams } from "react-router-dom";
+import { ACCESSORY_TYPES } from "../../../config/variation";
+import ManageCategory from "../shared/ManageCategory";
 
 interface BaseFormInterface {
   handleSubmit: FormEventHandler<HTMLFormElement>;
@@ -26,12 +46,30 @@ interface BaseFormInterface {
   >;
 }
 
+const filter = createFilterOptions<ICategoryDetails>();
+
 const BaseAccesoryForm: FC<BaseFormInterface> = ({
   handleSubmit,
   ref,
   masterAttributes,
   setMasterAttributes,
 }) => {
+  const { accessoryType = "" } = useParams();
+  const [categoryData, setCategoryData] = useFetch<ICategoryDetails[]>(
+    ENDPOINTS.categories,
+    { type: ACCESSORY_TYPES[accessoryType] }
+  );
+  const [brandsData, setBrandsData] = useFetch<IBrandDetails[]>(
+    ENDPOINTS.brands,
+    { type: ACCESSORY_TYPES[accessoryType] }
+  );
+  const [deviceModelsData, setDeviceModelsData] = useFetch<IDeviceModels[]>(
+    ENDPOINTS.deviceModels,
+    { type: ACCESSORY_TYPES[accessoryType] }
+  );
+  const [open, toggleOpen] = useState(false);
+  const [category, setCategory] = useState<ICategoryDetails | null>(null);
+
   const gridClass =
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4";
 
@@ -67,12 +105,30 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
 
         {/* Category */}
         <Autocomplete
-          options={[
-            { id: 1, name: "Test" },
-            { id: 2, name: "Somehting" },
-          ]}
+          options={categoryData.data ?? []}
+          value={category}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
+          onChange={(event, newValue) => {
+            if (newValue?.id == -1) {
+              setCategory(null);
+              toggleOpen(true);
+            } else {
+              setCategory(newValue);
+            }
+          }}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+
+            if (params.inputValue !== "") {
+              filtered.push({
+                id: -1,
+                name: `Add "${params.inputValue}"`,
+              } as any);
+            }
+
+            return filtered;
+          }}
           renderInput={(params) => (
             <TextField {...params} label="Category" required name="category" />
           )}
@@ -80,10 +136,7 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
 
         {/* Brand */}
         <Autocomplete
-          options={[
-            { id: 1, name: "Test" },
-            { id: 2, name: "Somehting" },
-          ]}
+          options={brandsData.data ?? []}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
           renderInput={(params) => (
@@ -93,10 +146,7 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
 
         {/* Device Name */}
         <Autocomplete
-          options={[
-            { id: 1, name: "Test" },
-            { id: 2, name: "Somehting" },
-          ]}
+          options={deviceModelsData.data ?? []}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
           renderInput={(params) => (
@@ -210,6 +260,28 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
       >
         Add
       </Button>
+
+      <Dialog open={open}>
+        <div className="p-2">
+          <IconButton
+            className="min-w-auto! self-end"
+            color="error"
+            onClick={() => toggleOpen(false)}
+          >
+            <CancelIcon fontSize="large" />
+          </IconButton>
+          <ManageCategory
+            saveCategory={(categoryDetails: ICategoryDetails) => {
+              setCategoryData((prevCategory) => ({
+                ...prevCategory,
+                data: prevCategory.data?.concat(categoryDetails) ?? [],
+              }));
+              setCategory(categoryDetails);
+              toggleOpen(false);
+            }}
+          />
+        </div>
+      </Dialog>
     </>
   );
 };

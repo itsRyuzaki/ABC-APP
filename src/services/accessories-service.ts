@@ -31,7 +31,11 @@ export async function postData<P, R>(
   payload: P
 ): Promise<RawApiResponse<R>> {
   try {
-    return await axiosInstance.post<P, RawApiResponse<R>>(endpoint, payload);
+    const response = await axiosInstance.post<RawApiResponse<R>>(
+      endpoint,
+      payload
+    );
+    return response.data;
   } catch (error) {
     return handleErrorResponse(endpoint, error);
   }
