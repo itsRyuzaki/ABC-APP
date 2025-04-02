@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import BaseAccesoryForm from "./BaseAccessoryForm";
-import { FormEvent, FormEventHandler, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import VariantAccessoryForm from "./VariantAccessoryForm";
 import {
   IAccessoryVariantData,
@@ -11,8 +11,17 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { v4 as uuidv4 } from "uuid";
-import { IKeyValuePair } from "../../../interfaces/IApiModels";
+import {
+  IAddAccessoryBasePayload,
+  IKeyValuePair,
+  ISellerDetails,
+} from "../../../interfaces/IApiModels";
 import { ExtractFormData } from "../../../utils/formUtils";
+import { useFetch } from "../../../hooks/useFetch";
+import { ENDPOINTS } from "../../../config/endpoints";
+import { ACCESSORY_TYPES } from "../../../config/variation";
+import { useParams } from "react-router-dom";
+import { postData } from "../../../services/accessories-service";
 
 const getInitialVariantState: (
   data?: IAccessoryVariantData
@@ -23,12 +32,17 @@ const getInitialVariantState: (
 });
 
 const AddAccessory = () => {
+  const { accessoryType = "" } = useParams();
   const baseRef = useRef<HTMLFormElement>(null);
   const variantRef = useRef<Record<string, HTMLFormElement>>({});
   const [variantStates, setVariantStates] = useState<IVariantState[]>([]);
   const [masterAttributes, setMasterAttributes] = useState<
     IKeyValuePair<string, string[]>[]
   >([{ key: "", value: [], id: uuidv4() }]);
+  const [sellersData, setSellersData] = useFetch<ISellerDetails[]>(
+    ENDPOINTS.sellers,
+    { type: ACCESSORY_TYPES[accessoryType] }
+  );
 
   const cardClasses =
     "card-wrapper p-8 shadow-lg shadow-gray-900 rounded-md abc-layout-clr mb-8";
@@ -44,8 +58,10 @@ const AddAccessory = () => {
     setVariantStates([...variantStates, getInitialVariantState()]);
   };
 
-  const handleBaseFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
+  const handleBaseFormSubmit: (
+    payload: IAddAccessoryBasePayload
+  ) => void = async (payload) => {
+    await postData(ENDPOINTS.baseAccessory, payload);
   };
 
   const handleVariantFormSubmit = (
@@ -62,7 +78,7 @@ const AddAccessory = () => {
       <h3>Base Details:</h3>
       <div className={cardClasses}>
         <BaseAccesoryForm
-          handleSubmit={handleBaseFormSubmit}
+          emitBaseFormData={handleBaseFormSubmit}
           ref={baseRef}
           masterAttributes={masterAttributes}
           setMasterAttributes={setMasterAttributes}
@@ -118,6 +134,8 @@ const AddAccessory = () => {
             handleSubmit={(event) => handleVariantFormSubmit(event, variant.id)}
             masterAttributes={masterAttributes}
             initialData={variant.initialData}
+            sellersData={sellersData}
+            setSellersData={setSellersData}
           />
         </div>
       ))}

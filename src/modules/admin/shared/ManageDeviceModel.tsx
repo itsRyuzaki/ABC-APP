@@ -5,16 +5,16 @@ import { IFileConfig } from "../../../interfaces/IFileUpload";
 import Button from "@mui/material/Button";
 import { postData } from "../../../services/accessories-service";
 import { ENDPOINTS } from "../../../config/endpoints";
-import { ICategoryDetails } from "../../../interfaces/IApiModels";
+import { IDeviceModels } from "../../../interfaces/IApiModels";
 import { ExtractFormData } from "../../../utils/formUtils";
 
-interface IManageCategory {
-  saveCategory: (categoryDetails: ICategoryDetails) => void;
+interface IManageDeviceModel {
+  saveDeviceModel: (modelDetails: IDeviceModels) => void;
   accessoryType: string;
 }
 
-const ManageCategory: FC<IManageCategory> = ({
-  saveCategory,
+const ManageDeviceModel: FC<IManageDeviceModel> = ({
+  saveDeviceModel,
   accessoryType,
 }) => {
   const [imageFiles, setImageFiles] = useState<IFileConfig[]>([]);
@@ -33,12 +33,12 @@ const ManageCategory: FC<IManageCategory> = ({
     );
 
     const response = await postData<FormData, number>(
-      ENDPOINTS.categories,
+      ENDPOINTS.deviceModels,
       formData
     );
 
     if (response.success && response.data && formRef.current) {
-      saveCategory({
+      saveDeviceModel({
         ...ExtractFormData(formRef.current),
         id: response.data,
       });
@@ -84,4 +84,4 @@ const ManageCategory: FC<IManageCategory> = ({
   );
 };
 
-export default ManageCategory;
+export default ManageDeviceModel;

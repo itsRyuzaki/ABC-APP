@@ -14,4 +14,12 @@ export interface IAccessoryVariantData {
   inBoxItems: string;
   attributes?: IKeyValuePair<string, string[]>[];
   files?: File[];
+  availableCount: number;
+}
+
+export interface IBaseAccessoryFormData {
+  name: string;
+  category: string;
+  deviceModel: string;
+  brand: string;
 }

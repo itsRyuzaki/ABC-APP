@@ -5,16 +5,16 @@ import { IFileConfig } from "../../../interfaces/IFileUpload";
 import Button from "@mui/material/Button";
 import { postData } from "../../../services/accessories-service";
 import { ENDPOINTS } from "../../../config/endpoints";
-import { ICategoryDetails } from "../../../interfaces/IApiModels";
+import { IBrandDetails } from "../../../interfaces/IApiModels";
 import { ExtractFormData } from "../../../utils/formUtils";
 
-interface IManageCategory {
-  saveCategory: (categoryDetails: ICategoryDetails) => void;
+interface IManageBrand {
+  saveBrand: (modelDetails: IBrandDetails) => void;
   accessoryType: string;
 }
 
-const ManageCategory: FC<IManageCategory> = ({
-  saveCategory,
+const ManageBrand: FC<IManageBrand> = ({
+  saveBrand,
   accessoryType,
 }) => {
   const [imageFiles, setImageFiles] = useState<IFileConfig[]>([]);
@@ -33,12 +33,12 @@ const ManageCategory: FC<IManageCategory> = ({
     );
 
     const response = await postData<FormData, number>(
-      ENDPOINTS.categories,
+      ENDPOINTS.brands,
       formData
     );
 
     if (response.success && response.data && formRef.current) {
-      saveCategory({
+      saveBrand({
         ...ExtractFormData(formRef.current),
         id: response.data,
       });
@@ -59,10 +59,9 @@ const ManageCategory: FC<IManageCategory> = ({
         <TextField
           fullWidth
           required
-          name="description"
-          label="Description"
+          name="officialSite"
+          label="Official Site"
           variant="outlined"
-          multiline
           className="mb-4!"
         />
         <FileUpload
@@ -84,4 +83,4 @@ const ManageCategory: FC<IManageCategory> = ({
   );
 };
 
-export default ManageCategory;
+export default ManageBrand;

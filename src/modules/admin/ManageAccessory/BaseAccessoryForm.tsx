@@ -9,18 +9,18 @@ import {
   OutlinedInput,
   Button,
   Chip,
-  createFilterOptions,
   Dialog,
 } from "@mui/material";
 import {
   Dispatch,
   FC,
   FormEventHandler,
-  Ref,
+  RefObject,
   SetStateAction,
   useState,
 } from "react";
 import {
+  IAddAccessoryBasePayload,
   IBrandDetails,
   ICategoryDetails,
   IDeviceModels,
@@ -36,20 +36,22 @@ import { useFetch } from "../../../hooks/useFetch";
 import { useParams } from "react-router-dom";
 import { ACCESSORY_TYPES } from "../../../config/variation";
 import ManageCategory from "../shared/ManageCategory";
+import ManageDeviceModel from "../shared/ManageDeviceModel";
+import ManageBrand from "../shared/ManageBrand";
+import { ExtractFormData, getCustomAddOption } from "../../../utils/formUtils";
+import { IBaseAccessoryFormData } from "../../../interfaces/IManageAccessory";
 
 interface BaseFormInterface {
-  handleSubmit: FormEventHandler<HTMLFormElement>;
-  ref: Ref<HTMLFormElement>;
+  emitBaseFormData: (payload: IAddAccessoryBasePayload) => void;
+  ref: RefObject<HTMLFormElement | null>;
   masterAttributes: IKeyValuePair<string, string[]>[];
   setMasterAttributes: Dispatch<
     SetStateAction<IKeyValuePair<string, string[]>[]>
   >;
 }
 
-const filter = createFilterOptions<ICategoryDetails>();
-
 const BaseAccesoryForm: FC<BaseFormInterface> = ({
-  handleSubmit,
+  emitBaseFormData,
   ref,
   masterAttributes,
   setMasterAttributes,
@@ -67,8 +69,10 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
     ENDPOINTS.deviceModels,
     { type: ACCESSORY_TYPES[accessoryType] }
   );
-  const [open, toggleOpen] = useState(false);
+  const [dialogConfig, setDialogConfig] = useState({ isOpen: false, type: "" });
   const [category, setCategory] = useState<ICategoryDetails | null>(null);
+  const [deviceModel, setDeviceModel] = useState<IDeviceModels | null>(null);
+  const [brand, setBrand] = useState<IBrandDetails | null>(null);
 
   const gridClass =
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4";
@@ -91,6 +95,71 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
     }
   };
 
+  const getDialogForm = (type: string) => {
+    switch (type) {
+      case "category":
+        return (
+          <ManageCategory
+            accessoryType={ACCESSORY_TYPES[accessoryType]}
+            saveCategory={(categoryDetails: ICategoryDetails) => {
+              setCategoryData((prevCategory) => ({
+                ...prevCategory,
+                data: prevCategory.data?.concat(categoryDetails) ?? [],
+              }));
+              setCategory(categoryDetails);
+              setDialogConfig({ isOpen: false, type: "" });
+            }}
+          />
+        );
+      case "deviceModel":
+        return (
+          <ManageDeviceModel
+            accessoryType={ACCESSORY_TYPES[accessoryType]}
+            saveDeviceModel={(modelDetails: IDeviceModels) => {
+              setDeviceModelsData((prevModel) => ({
+                ...prevModel,
+                data: prevModel.data?.concat(modelDetails) ?? [],
+              }));
+              setDeviceModel(modelDetails);
+              setDialogConfig({ isOpen: false, type: "" });
+            }}
+          />
+        );
+      case "brand":
+        return (
+          <ManageBrand
+            accessoryType={ACCESSORY_TYPES[accessoryType]}
+            saveBrand={(brandDetails: IBrandDetails) => {
+              setBrandsData((prevBrand) => ({
+                ...prevBrand,
+                data: prevBrand.data?.concat(brandDetails) ?? [],
+              }));
+              setBrand(brandDetails);
+              setDialogConfig({ isOpen: false, type: "" });
+            }}
+          />
+        );
+      default:
+        return <></>;
+    }
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+
+    if (ref.current) {
+      const formData = ExtractFormData<IBaseAccessoryFormData>(ref.current);
+      emitBaseFormData({
+        name: formData.name,
+        categoryId: category?.id ?? 0,
+        deviceModelId: deviceModel?.id ?? 0,
+        brandId: brand?.id ?? 0,
+        type: ACCESSORY_TYPES[accessoryType],
+        masterAttributes,
+      });
+    }
+  };
+
   return (
     <>
       <form ref={ref} onSubmit={handleSubmit} className={gridClass}>
@@ -106,29 +175,21 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
         {/* Category */}
         <Autocomplete
           options={categoryData.data ?? []}
-          value={category}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
-          onChange={(event, newValue) => {
+          value={category}
+          onChange={(_event, newValue) => {
             if (newValue?.id == -1) {
               setCategory(null);
-              toggleOpen(true);
+              setDialogConfig({
+                isOpen: true,
+                type: "category",
+              });
             } else {
               setCategory(newValue);
             }
           }}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-
-            if (params.inputValue !== "") {
-              filtered.push({
-                id: -1,
-                name: `Add "${params.inputValue}"`,
-              } as any);
-            }
-
-            return filtered;
-          }}
+          {...getCustomAddOption<ICategoryDetails>()}
           renderInput={(params) => (
             <TextField {...params} label="Category" required name="category" />
           )}
@@ -139,22 +200,48 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
           options={brandsData.data ?? []}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
+          value={brand}
+          onChange={(_event, newValue) => {
+            if (newValue?.id == -1) {
+              setBrand(null);
+              setDialogConfig({
+                isOpen: true,
+                type: "brand",
+              });
+            } else {
+              setBrand(newValue);
+            }
+          }}
+          {...getCustomAddOption<IBrandDetails>()}
           renderInput={(params) => (
             <TextField {...params} label="Brand" required name="brand" />
           )}
         />
 
-        {/* Device Name */}
+        {/* Device Model */}
         <Autocomplete
           options={deviceModelsData.data ?? []}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.id == value.id}
+          value={deviceModel}
+          onChange={(_event, newValue) => {
+            if (newValue?.id == -1) {
+              setDeviceModel(null);
+              setDialogConfig({
+                isOpen: true,
+                type: "deviceModel",
+              });
+            } else {
+              setDeviceModel(newValue);
+            }
+          }}
+          {...getCustomAddOption<IDeviceModels>()}
           renderInput={(params) => (
             <TextField
               {...params}
               fullWidth
-              label="Device Name"
-              name="deviceName"
+              label="Device model"
+              name="deviceModel"
               required
             />
           )}
@@ -261,25 +348,16 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
         Add
       </Button>
 
-      <Dialog open={open}>
+      <Dialog open={dialogConfig.isOpen}>
         <div className="p-2">
           <IconButton
             className="min-w-auto! self-end"
             color="error"
-            onClick={() => toggleOpen(false)}
+            onClick={() => setDialogConfig({ isOpen: false, type: "" })}
           >
             <CancelIcon fontSize="large" />
           </IconButton>
-          <ManageCategory
-            saveCategory={(categoryDetails: ICategoryDetails) => {
-              setCategoryData((prevCategory) => ({
-                ...prevCategory,
-                data: prevCategory.data?.concat(categoryDetails) ?? [],
-              }));
-              setCategory(categoryDetails);
-              toggleOpen(false);
-            }}
-          />
+          {getDialogForm(dialogConfig.type)}
         </div>
       </Dialog>
     </>

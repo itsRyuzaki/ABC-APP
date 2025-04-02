@@ -23,6 +23,22 @@ export interface IUserSignUpPayload {
 export interface ISellerDetails {
   id: number;
   name: string;
+  mobileNumber: string;
+  address: string;
+  website: string;
+}
+
+export interface IAddSellerPayload extends Omit<ISellerDetails, "id"> {
+  type: string;
+}
+
+export interface IAddAccessoryBasePayload {
+  type: string;
+  name: string;
+  categoryId: number;
+  deviceModelId: number;
+  brandId: number;
+  masterAttributes: IKeyValuePair<string, string[]>[];
 }
 
 export interface IBaseImage {
@@ -31,7 +47,7 @@ export interface IBaseImage {
   order: number;
 }
 
-export interface ICategoryDetails extends IBaseImage  {
+export interface ICategoryDetails extends IBaseImage {
   id: number;
   name: string;
   description: string;
