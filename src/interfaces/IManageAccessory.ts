@@ -1,4 +1,5 @@
-import { IKeyValuePair } from "./IApiModels";
+import { IKeyValuePair, ISellerDetails } from "./IApiModels";
+import { IFileConfig } from "./IFileUpload";
 
 export interface IVariantState {
   isLoading: boolean;
@@ -12,9 +13,16 @@ export interface IAccessoryVariantData {
   abcPrice: string;
   specifications: string;
   inBoxItems: string;
-  attributes?: IKeyValuePair<string, string[]>[];
+  [k:`altText@@${string}`]: string;
+  [k:`attributeKey@@${string}`]: string;
+  [k:`attributeValue@@${string}`]: string;
   files?: File[];
   availableCount: number;
+}
+
+export interface IAccessoryVariantEmittedData {
+  imageFiles: IFileConfig[];
+  seller: ISellerDetails;
 }
 
 export interface IBaseAccessoryFormData {

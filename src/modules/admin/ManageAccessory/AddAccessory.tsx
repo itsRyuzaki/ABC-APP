@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import BaseAccesoryForm from "./BaseAccessoryForm";
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import VariantAccessoryForm from "./VariantAccessoryForm";
 import {
   IAccessoryVariantData,
+  IAccessoryVariantEmittedData,
   IVariantState,
 } from "../../../interfaces/IManageAccessory";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
@@ -13,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
 import {
   IAddAccessoryBasePayload,
+  IAddAccessoryVariantPayload,
   IKeyValuePair,
   ISellerDetails,
 } from "../../../interfaces/IApiModels";
@@ -43,15 +45,13 @@ const AddAccessory = () => {
     ENDPOINTS.sellers,
     { type: ACCESSORY_TYPES[accessoryType] }
   );
+  let accessoryBaseId: string;
 
   const cardClasses =
     "card-wrapper p-8 shadow-lg shadow-gray-900 rounded-md abc-layout-clr mb-8";
 
   const handleSubmitClick = () => {
     baseRef.current?.requestSubmit();
-    variantStates.forEach((variant) => {
-      variantRef.current[variant.id].requestSubmit();
-    });
   };
 
   const handleAddVariantClick = () => {
@@ -61,15 +61,79 @@ const AddAccessory = () => {
   const handleBaseFormSubmit: (
     payload: IAddAccessoryBasePayload
   ) => void = async (payload) => {
-    await postData(ENDPOINTS.baseAccessory, payload);
+    const response = await postData<IAddAccessoryBasePayload, string>(
+      ENDPOINTS.baseAccessory,
+      payload
+    );
+    if (response.success && response.data) {
+      accessoryBaseId = response.data;
+      variantStates.forEach((variant) => {
+        variantRef.current[variant.id].requestSubmit();
+      });
+    }
   };
 
-  const handleVariantFormSubmit = (
-    event: FormEvent<HTMLFormElement>,
-    id: string
+  const handleVariantFormSubmit = async (
+    eventData: IAccessoryVariantEmittedData,
+    variantId: string
   ) => {
-    event.preventDefault();
-    console.log(ExtractFormData<any>(variantRef.current[id]));
+    const formData = ExtractFormData<IAccessoryVariantData>(
+      variantRef.current[variantId]
+    );
+
+    const response = await postData<IAddAccessoryVariantPayload, number>(
+      ENDPOINTS.accessory,
+      {
+        type: ACCESSORY_TYPES[accessoryType],
+        description: formData.description,
+        specifications: formData.specifications.split("\n"),
+        inBoxItems: formData.inBoxItems.split("\n"),
+        availableCount: formData.availableCount,
+        sellerPrice: Number(formData.sellerPrice),
+        abcPrice: Number(formData.abcPrice),
+        sellerIds: [eventData.seller.id],
+        accessoryBaseId,
+        itemAttributes: masterAttributes.reduce(
+          (mappedData: Record<string, string>, attribute) => {
+            const key = `attributeKey@@${attribute.id}` as const;
+            const value = `attributeValue@@${attribute.id}` as const;
+
+            if (formData[key]) {
+              mappedData[formData[key]] = formData[value];
+            }
+            return mappedData;
+          },
+          {}
+        ),
+      }
+    );
+
+    if (response.success) {
+      const imagesPayload = new FormData();
+      const helperPayload = {
+        type: ACCESSORY_TYPES[accessoryType],
+        accessoryGuid: response.data,
+        itemImages: eventData.imageFiles.map((imgFile, index) => {
+          const key = `altText@@${imgFile.id}` as const;
+          return {
+            altText: formData[key],
+            order: index,
+          };
+        }),
+      };
+      imagesPayload.append(
+        "requestPayload",
+        new File([JSON.stringify(helperPayload)], "helper.json")
+      );
+      eventData.imageFiles.forEach((imgFile) =>
+        imagesPayload.append("images", imgFile.file)
+      );
+
+      await postData<FormData, boolean[]>(
+        ENDPOINTS.accessoryImages,
+        imagesPayload
+      );
+    }
   };
 
   return (
@@ -131,7 +195,9 @@ const AddAccessory = () => {
             ref={(el: HTMLFormElement) => {
               variantRef.current[variant.id] = el;
             }}
-            handleSubmit={(event) => handleVariantFormSubmit(event, variant.id)}
+            emitvariantFormData={(payload) =>
+              handleVariantFormSubmit(payload, variant.id)
+            }
             masterAttributes={masterAttributes}
             initialData={variant.initialData}
             sellersData={sellersData}

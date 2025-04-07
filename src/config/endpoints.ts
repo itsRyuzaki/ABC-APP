@@ -9,6 +9,8 @@ export const ENDPOINTS = {
   sellers: "Accessories/sellers",
   deviceModels: "Accessories/device-models",
   baseAccessory: "Accessories/accessory-base",
+  accessory: "Accessories",
+  accessoryImages: "Accessories/images",
 };
 
 export const BASE_PATH = "/api";

@@ -38,7 +38,20 @@ export interface IAddAccessoryBasePayload {
   categoryId: number;
   deviceModelId: number;
   brandId: number;
-  masterAttributes: IKeyValuePair<string, string[]>[];
+  masterData: IKeyValuePair<string, string[]>[];
+}
+
+export interface IAddAccessoryVariantPayload {
+  type: string;
+  description: string;
+  sellerPrice: number;
+  abcPrice: number;
+  specifications: string[];
+  inBoxItems: string[];
+  itemAttributes: Record<string,string>;
+  availableCount: number;
+  sellerIds: number[];
+  accessoryBaseId: string;
 }
 
 export interface IBaseImage {
