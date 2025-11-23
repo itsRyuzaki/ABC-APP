@@ -12,7 +12,7 @@ const Modal = forwardRef<
   IModalComponent
 >(({ children, onClose }, ref) => {
   return createPortal(
-    <motion.dialog onClose={onClose} ref={ref}>
+    <motion.dialog onClose={onClose} ref={ref} className="m-auto">
       {children}
     </motion.dialog>,
     document.getElementById("modal-container") as Element
