@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense } from "react";
+import { FC, JSX, lazy, Suspense } from "react";
 
 interface ILazyComponent {
   pathFn: () => Promise<{

@@ -1,6 +1,6 @@
 export const ENDPOINTS = {
-  fetchMobile: "mobiles",
-  fetchComputers: "computers",
+  fetchMobile: "Accessories/filter",
+  fetchComputers: "Accessories/filter",
   userLogin: "Users/login",
   userSignUp: "Users/signup",
   validateCreds: "Users/validate",

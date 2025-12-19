@@ -6,6 +6,8 @@ const AccessoryDetailsPage = () => {
     (state) => state.accessoryDetails.details
   );
 
+   
+
   return (
     <div className="bg-white">
       <div className="pt-6">

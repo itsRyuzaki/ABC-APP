@@ -155,7 +155,7 @@ const BaseAccesoryForm: FC<BaseFormInterface> = ({
         deviceModelId: deviceModel?.id ?? 0,
         brandId: brand?.id ?? 0,
         type: ACCESSORY_TYPES[accessoryType],
-        masterData: masterAttributes,
+        masterAttributes,
       });
     }
   };

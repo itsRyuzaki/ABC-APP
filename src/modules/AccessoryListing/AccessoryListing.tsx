@@ -6,9 +6,11 @@ import { useLoaderData } from "react-router-dom";
 
 const AccessoryListingComponent = () => {
   const { CONFIG } = useLoaderData() as { CONFIG: IPageLoadConfig };
-  const { response } = usePost<null, IAccessoryList[]>(CONFIG.fetchEndpoint, null, [
+  const { response } = usePost<any, IAccessoryList[]>(
     CONFIG.fetchEndpoint,
-  ]);
+    { type: CONFIG.type },
+    [CONFIG.type]
+  );
   return (
     <>
       {response.isLoading ? (

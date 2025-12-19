@@ -38,7 +38,7 @@ export interface IAddAccessoryBasePayload {
   categoryId: number;
   deviceModelId: number;
   brandId: number;
-  masterData: IKeyValuePair<string, string[]>[];
+  masterAttributes: IKeyValuePair<string, string[]>[];
 }
 
 export interface IAddAccessoryVariantPayload {

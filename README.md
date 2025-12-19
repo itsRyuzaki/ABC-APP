@@ -10,4 +10,3 @@ ABC(Accessories But Cheaper) is an all-in-one app both in terms of accessories a
 - Clone the git repo
 - Do `npm i` at root level
 - Then `npm run dev` (open on port 5173)
-- Then `npm run backend`

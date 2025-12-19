@@ -23,7 +23,7 @@ const Items: FC<IItemsComponent> = ({ itemList }) => {
           <Link to={`${data.id}`}>
             <article className="flex flex-col justify-between">
               <img
-                src={data.imageURLs[0]}
+                src={data.imageURLs?.[0]}
                 alt={data.name}
                 className="min-w-80 max-w-96 h-72 object-contain border-b border-white"
               />
