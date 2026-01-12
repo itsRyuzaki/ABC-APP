@@ -19,38 +19,7 @@ const AccessoryListingComponent = () => {
         <Items itemList={response.data} />
       ) : (
         <p>
-          No data found
-          <Items
-            itemList={[
-              {
-                id: 1,
-                name: "hello",
-                description: "som",
-                price: "123",
-                imageURLs: [
-                  "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21255-DUmnkxSx65ie.png",
-                ],
-              },
-              {
-                id: 1,
-                name: "hello",
-                description: "som",
-                price: "123",
-                imageURLs: [
-                  "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21255-DUmnkxSx65ie.png",
-                ],
-              },
-              {
-                id: 1,
-                name: "hello",
-                description: "som",
-                price: "123",
-                imageURLs: [
-                  "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21255-DUmnkxSx65ie.png",
-                ],
-              },
-            ]}
-          />
+          Didn't find what you were looking for? Try changing your filter
         </p>
       )}
     </>

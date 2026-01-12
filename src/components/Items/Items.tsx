@@ -5,6 +5,7 @@ import { FC } from "react";
 import { useAppSelector } from "../../store/store-hooks";
 import { UserRole } from "../../enums/UserRoleEnum";
 import { Link } from "react-router-dom";
+import { BLOB_PATH, IMG_UNAVAILABLE_PATH } from "../../config/endpoints";
 
 interface IItemsComponent {
   itemList: IAccessoryList[];
@@ -23,7 +24,9 @@ const Items: FC<IItemsComponent> = ({ itemList }) => {
           <Link to={`${data.id}`}>
             <article className="flex flex-col justify-between">
               <img
-                src={data.imageURLs?.[0]}
+                src={`${BLOB_PATH}${
+                  data.imageURLs?.[0] ?? IMG_UNAVAILABLE_PATH
+                }`}
                 alt={data.name}
                 className="min-w-80 max-w-96 h-72 object-contain border-b border-white"
               />

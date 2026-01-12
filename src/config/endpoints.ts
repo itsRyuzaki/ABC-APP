@@ -14,3 +14,7 @@ export const ENDPOINTS = {
 };
 
 export const BASE_PATH = "/api";
+
+export const BLOB_PATH = "";
+
+export const IMG_UNAVAILABLE_PATH = "";
