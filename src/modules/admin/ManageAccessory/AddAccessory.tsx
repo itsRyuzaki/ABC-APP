@@ -91,6 +91,7 @@ const AddAccessory = () => {
         availableCount: formData.availableCount,
         sellerPrice: Number(formData.sellerPrice),
         abcPrice: Number(formData.abcPrice),
+        originalPrice: Number(formData.originalPrice),
         sellerIds: [eventData.seller.id],
         accessoryBaseId,
         itemAttributes: masterAttributes.reduce(

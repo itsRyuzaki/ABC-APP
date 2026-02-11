@@ -1,4 +1,4 @@
-import { IKeyValuePair, ISellerDetails } from "./IApiModels";
+import { ISellerDetails } from "./IApiModels";
 import { IFileConfig } from "./IFileUpload";
 
 export interface IVariantState {
@@ -11,6 +11,7 @@ export interface IAccessoryVariantData {
   description: string;
   sellerPrice: string;
   abcPrice: string;
+  originalPrice: string;
   specifications: string;
   inBoxItems: string;
   [k:`altText@@${string}`]: string;

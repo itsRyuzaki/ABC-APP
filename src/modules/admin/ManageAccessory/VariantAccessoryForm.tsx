@@ -29,20 +29,20 @@ import { ACCESSORY_TYPES } from "../../../config/variation";
 import { useParams } from "react-router-dom";
 
 interface IVariantAccessoryForm {
-  emitvariantFormData: (payload: IAccessoryVariantEmittedData) => void;
-  ref: RefCallback<HTMLFormElement>;
   masterAttributes: IKeyValuePair<string, string[]>[];
   initialData: IAccessoryVariantData | null;
   sellersData: ApiResponse<ISellerDetails[]>;
+  ref: RefCallback<HTMLFormElement>;
+  emitvariantFormData: (payload: IAccessoryVariantEmittedData) => void;
   setSellersData: Dispatch<SetStateAction<ApiResponse<ISellerDetails[]>>>;
 }
 
 const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
-  ref,
-  emitvariantFormData,
   masterAttributes,
   initialData,
   sellersData,
+  ref,
+  emitvariantFormData,
   setSellersData,
 }) => {
   const { accessoryType = "" } = useParams();
@@ -154,6 +154,13 @@ const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
             label="ABC Price"
             defaultValue={initialData?.abcPrice}
           />
+          <TextField
+            fullWidth
+            required
+            name="originalPrice"
+            label="Original Price"
+            defaultValue={initialData?.originalPrice}
+          />
         </div>
 
         <h4 className="mb-4">Attributes:</h4>
@@ -174,7 +181,7 @@ const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
                       variant="contained"
                       onClick={() =>
                         setDisabledAttributes((prevAttr) =>
-                          prevAttr.filter((attr) => attr !== attribute.id)
+                          prevAttr.filter((attr) => attr !== attribute.id),
                         )
                       }
                     >
@@ -192,7 +199,7 @@ const VariantAccessoryForm: FC<IVariantAccessoryForm> = ({
                       variant="contained"
                       onClick={() =>
                         setDisabledAttributes((prevAttr) =>
-                          prevAttr.concat([attribute.id as string])
+                          prevAttr.concat([attribute.id as string]),
                         )
                       }
                     >

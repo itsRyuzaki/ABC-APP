@@ -46,6 +46,7 @@ export interface IAddAccessoryVariantPayload {
   description: string;
   sellerPrice: number;
   abcPrice: number;
+  originalPrice: number;
   specifications: string[];
   inBoxItems: string[];
   itemAttributes: Record<string,string>;
