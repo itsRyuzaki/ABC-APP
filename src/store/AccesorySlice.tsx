@@ -3,7 +3,7 @@ import { IAccessoriesDetails } from "../interfaces/IAccessoryModels";
 
 
 interface IAccessoryState {
-  details: Partial<IAccessoriesDetails> | null;
+  details: IAccessoriesDetails | null;
 }
 const initialState: IAccessoryState = {
   details: null,

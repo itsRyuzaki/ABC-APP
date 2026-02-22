@@ -5,7 +5,7 @@ import { ApiResponse } from "../interfaces/IApiResponse";
 export function usePost<P, R>(endpoint: string, payload: P, dependencies:any[] = []) {
   const [response, setResponse] = useState<ApiResponse<R>>({
     data: null,
-    isLoading: false,
+    isLoading: true,
     hasError: false,
   });
 

@@ -1,20 +1,22 @@
-export interface IAccessoryList {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  imageURLs: string[];
+export interface IImageDetails {
+  altText: string;
+  order: number;
+  source: string;
 }
 
+
 export interface IAccessoriesDetails {
+  accessoryGuid: string;
   name: string;
   description: string;
   specification: string[];
   inBoxDetails: string[];
   sellerName: string;
-  ourPrice: string;
-  imageURLs: { alt: string; src: string }[];
+  discountedPrice: number;
+  originalPrice: number;
+  imageDetails: IImageDetails[];
   brand: string;
   category: string;
   subCategory: string;
+  availableCount: number;
 }

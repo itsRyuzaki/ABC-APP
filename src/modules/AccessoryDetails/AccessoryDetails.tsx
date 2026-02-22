@@ -73,8 +73,8 @@ const AccessoryDetailsPage = () => {
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           <img
-            alt={accessoryDetails?.imageURLs?.[0].alt}
-            src={accessoryDetails?.imageURLs?.[0].src}
+            alt={accessoryDetails?.imageDetails?.[0].altText}
+            src={accessoryDetails?.imageDetails?.[0].source}
             className="hidden size-full rounded-lg object-cover lg:block"
           />
           {/* <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
@@ -108,7 +108,7 @@ const AccessoryDetailsPage = () => {
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">accessoryDetails information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
-              {accessoryDetails?.ourPrice}
+              {accessoryDetails?.discountedPrice}
             </p>
 
             {/* Reviews */}

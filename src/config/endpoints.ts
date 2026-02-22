@@ -15,6 +15,6 @@ export const ENDPOINTS = {
 
 export const BASE_PATH = "/api";
 
-export const BLOB_PATH = "";
+export const BLOB_PATH = "http://127.0.0.1:10000/devstoreaccount1/mobile/";
 
 export const IMG_UNAVAILABLE_PATH = "";
