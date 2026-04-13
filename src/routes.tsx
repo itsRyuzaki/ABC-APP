@@ -33,6 +33,7 @@ export const routerConfig = createBrowserRouter([
         children: [
           {
             path: ":id",
+            loader: async () => await import("./modules/config/Mobiles.config"),
             element: (
               <LazyComponent
                 pathFn={() =>

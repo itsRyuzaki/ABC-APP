@@ -11,6 +11,7 @@ export const ENDPOINTS = {
   baseAccessory: "Accessories/accessory-base",
   accessory: "Accessories",
   accessoryImages: "Accessories/images",
+  accessoryDetails: "Accessories/details"
 };
 
 export const BASE_PATH = "/api";
