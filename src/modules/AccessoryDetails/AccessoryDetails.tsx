@@ -1,19 +1,28 @@
 import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import { useAppDispatch, useAppSelector } from "../../store/store-hooks";
 import { fetchAccessoryDetails } from "../../store/AccesorySlice";
-import { useLoaderData, useParams } from "react-router-dom";
-import { IPageLoadConfig } from "../../interfaces/IPageConfig";
+import { useParams } from "react-router-dom";
+import { AccessoryRouteTypeMap } from "../config/AccessoryConfig";
 
 const AccessoryDetailsPage = () => {
   const accessoryDetails = useAppSelector(
     (state) => state.accessoryDetails.details,
   );
 
-  const { id } = useParams();
-  const { CONFIG } = useLoaderData() as { CONFIG: IPageLoadConfig };
+  const apiLoaded = useAppSelector((state) => state.accessoryDetails.loaded);
+
+  const { id, accessoryType } = useParams();
 
   const dispatch = useAppDispatch();
-  dispatch(fetchAccessoryDetails({ type: CONFIG.type, id }));
+
+  if (!apiLoaded) {
+    dispatch(
+      fetchAccessoryDetails({
+        type: AccessoryRouteTypeMap[accessoryType as string],
+        id: id as string,
+      }),
+    );
+  }
 
   return (
     <div className="bg-white">

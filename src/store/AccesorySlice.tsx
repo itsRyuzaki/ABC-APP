@@ -7,15 +7,17 @@ import { RawApiResponse } from "../interfaces/IApiResponse";
 interface IAccessoryState {
   details: IAccessoriesDetails | null;
   hasError: boolean;
+  loaded: boolean;
 }
 const initialState: IAccessoryState = {
   details: null,
   hasError: false,
+  loaded: false,
 };
 
 export const fetchAccessoryDetails = createAsyncThunk(
   "Accessory/details",
-  async (data: { type: string; id: string | undefined }) => {
+  async (data: { type: string; id: string }) => {
     const response = await postData<{ type: string }, IAccessoriesDetails>(
       `${ENDPOINTS.accessoryDetails}/${data.id}`,
       { type: data.type },
@@ -42,10 +44,12 @@ const AccessorySlice = createSlice({
         (state, action: PayloadAction<RawApiResponse<IAccessoriesDetails>>) => {
           state.hasError = !action.payload.success;
           state.details = action.payload.data;
+          state.loaded = true;
         },
       )
       .addCase(fetchAccessoryDetails.rejected, (state) => {
         state.hasError = true;
+        state.loaded = true;
       });
   },
 });

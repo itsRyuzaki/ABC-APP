@@ -1,7 +1,36 @@
-import { createBrowserRouter } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  useParams,
+} from "react-router-dom";
 import App from "./App";
 import { ROUTER_CONSTANTS } from "./config/router-constants";
 import LazyComponent from "./shared/LazyComponent/LazyComponent";
+import { AccessoryRouteTypeMap } from "./modules/config/AccessoryConfig";
+import { lazy } from "react";
+
+const AccessoryRouteGuard = () => {
+  const { accessoryType } = useParams();
+
+  if (!AccessoryRouteTypeMap[accessoryType as string]) {
+    return <Navigate to="/404" replace />;
+  }
+
+  return <Outlet />;
+};
+
+const AddAccessory = lazy(
+  () => import("./modules/admin/ManageAccessory/AddAccessory"),
+);
+
+const AccessoryListing = lazy(
+  () => import("./modules/AccessoryListing/AccessoryListing"),
+);
+
+const AccessoryDetais = lazy(
+  () => import("./modules/AccessoryDetails/AccessoryDetails"),
+);
 
 export const routerConfig = createBrowserRouter([
   {
@@ -17,11 +46,9 @@ export const routerConfig = createBrowserRouter([
               {
                 path: "add",
                 element: (
-                  <LazyComponent
-                    pathFn={() =>
-                      import("./modules/admin/ManageAccessory/AddAccessory")
-                    }
-                  ></LazyComponent>
+                  <LazyComponent>
+                    <AddAccessory />
+                  </LazyComponent>
                 ),
               },
             ],
@@ -29,45 +56,23 @@ export const routerConfig = createBrowserRouter([
         ],
       },
       {
-        path: ROUTER_CONSTANTS.mobiles,
+        path: ":accessoryType",
+        element: <AccessoryRouteGuard />,
         children: [
           {
             path: ":id",
-            loader: async () => await import("./modules/config/Mobiles.config"),
             element: (
-              <LazyComponent
-                pathFn={() =>
-                  import("./modules/AccessoryDetails/AccessoryDetails")
-                }
-              />
+              <LazyComponent>
+                <AccessoryDetais />
+              </LazyComponent>
             ),
           },
           {
             path: "",
-            loader: async () => await import("./modules/config/Mobiles.config"),
             element: (
-              <LazyComponent
-                pathFn={() =>
-                  import("./modules/AccessoryListing/AccessoryListing")
-                }
-              />
-            ),
-          },
-        ],
-      },
-      {
-        path: ROUTER_CONSTANTS.computersAndLaptops,
-        children: [
-          {
-            path: "",
-            loader: async () =>
-              await import("./modules/config/ComputersLaptops.config"),
-            element: (
-              <LazyComponent
-                pathFn={() =>
-                  import("./modules/AccessoryListing/AccessoryListing")
-                }
-              />
+              <LazyComponent>
+                <AccessoryListing />
+              </LazyComponent>
             ),
           },
         ],

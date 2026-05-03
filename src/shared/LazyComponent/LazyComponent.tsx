@@ -1,12 +1,9 @@
-import { FC, JSX, lazy, Suspense } from "react";
+import { FC, ReactNode, Suspense } from "react";
 
 interface ILazyComponent {
-  pathFn: () => Promise<{
-    default: () => JSX.Element;
-  }>;
+  children: ReactNode;
 }
-const LazyComponent: FC<ILazyComponent> = ({ pathFn }) => {
-  const Component = lazy(pathFn);
+const LazyComponent: FC<ILazyComponent> = ({ children }) => {
   return (
     <Suspense
       fallback={
@@ -16,7 +13,7 @@ const LazyComponent: FC<ILazyComponent> = ({ pathFn }) => {
         </p>
       }
     >
-      <Component />
+      {children}
     </Suspense>
   );
 };

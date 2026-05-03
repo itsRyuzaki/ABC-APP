@@ -1,20 +1,22 @@
 import ItemCard from "../../components/ItemCard/ItemCard";
 import { usePost } from "../../hooks/usePost";
 import { IAccessoriesDetails } from "../../interfaces/IAccessoryModels";
-import { IPageLoadConfig } from "../../interfaces/IPageConfig";
-import { useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/store-hooks";
 import { addToCart, removeFromCart } from "../../store/CartSlice";
 import Fab from "@mui/material/Fab";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
+import { ENDPOINTS } from "../../config/endpoints";
+import { AccessoryRouteTypeMap } from "../config/AccessoryConfig";
 
 const AccessoryListingComponent = () => {
-  const { CONFIG } = useLoaderData() as { CONFIG: IPageLoadConfig };
+  const { accessoryType } = useParams();
+
   const { response } = usePost<any, IAccessoriesDetails[]>(
-    CONFIG.fetchEndpoint,
-    { type: CONFIG.type },
-    [CONFIG.type],
+    ENDPOINTS.accessoryListing,
+    { type: AccessoryRouteTypeMap[accessoryType as string] },
+    [accessoryType],
   );
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cartDetails.items);

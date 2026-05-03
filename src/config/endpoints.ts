@@ -1,6 +1,4 @@
 export const ENDPOINTS = {
-  fetchMobile: "Accessories/filter",
-  fetchComputers: "Accessories/filter",
   userLogin: "Users/login",
   userSignUp: "Users/signup",
   validateCreds: "Users/validate",
@@ -11,7 +9,8 @@ export const ENDPOINTS = {
   baseAccessory: "Accessories/accessory-base",
   accessory: "Accessories",
   accessoryImages: "Accessories/images",
-  accessoryDetails: "Accessories/details"
+  accessoryDetails: "Accessories/details",
+  accessoryListing: "Accessories/filter",
 };
 
 export const BASE_PATH = "/api";
