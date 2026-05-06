@@ -6,31 +6,10 @@ import Spinner from "./shared/Spinner/Spinner";
 import logoImg from "./assets/logo.jpg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "./store/store-hooks";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { darkTheme } from "./theme";
 
 let loaded = false;
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    background: {
-      default: "#222831",
-      paper: "#222831",
-    },
-    primary: {
-      main: "#00adb5",
-      dark: "#06979c",
-      light: "#00bcc7",
-      contrastText: "#222831",
-    },
-    secondary: {
-      main: "#ffc404",
-      dark: "#ffab04",
-      light: "#ffab04",
-      contrastText: "#222831",
-    },
-  },
-});
 
 function App() {
   const [showAvatarTransition, setShowAvatarTransition] = useState(true);
@@ -38,7 +17,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   const { userData, isLoggedIn, areCredsValidated } = useAppSelector(
-    (state) => state.authorization
+    (state) => state.authorization,
   );
 
   useEffect(() => {
@@ -57,6 +36,7 @@ function App() {
   return (
     <>
       <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
         <Header />
         <AnimatePresence>
           {areCredsValidated ? (

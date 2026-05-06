@@ -1,37 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap");
 @import "tailwindcss";
-
-@layer base {
-  h1 {
-    font-size: var(--text-4xl);
-  }
-  h2 {
-    font-size: var(--text-3xl);
-  }
-  h3 {
-    font-size: var(--text-2xl);
-  }
-  h4 {
-    font-size: var(--text-xl);
-  }
-}
-
-:root {
-  --abc-primary-color: #222831;
-  --abc-secondary-color: #EEEEEE;
-  --abc-tertiary-color: #393E46;
-  --abc-title-color: #00adb5;
-  --abc-txt-color: #F1F1F1;
-  --abc-heading-color: #865dff;
-}
-
-.abc-sec-clr {
-  color: var(--abc-secondary-color);
-}
-
-.abc-layout-clr {
-  background-color: var(--abc-tertiary-color);
-}
 
 * {
   box-sizing: border-box;
@@ -40,78 +7,7 @@
 body {
   margin: 0;
   padding: 1.5rem 3rem;
-  font-family: "Kalam", serif;
-  background: var(--abc-primary-color);
-  color: var(--abc-txt-color);
   min-height: 100vh;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.modal-actions .text-button {
-  color: #1d1a16;
-}
-
-.modal-actions .text-button:hover,
-.modal-actions .text-button:active {
-  color: #312c1d;
-}
-
-.control {
-  margin: 0.5rem 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.control label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.control input {
-  width: 100%;
-  max-width: 20rem;
-  font: inherit;
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.control-row {
-  display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-}
-
-.modal {
-  background-color: #e4ddd4;
-  border-radius: 6px;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-  width: 80%;
-  max-width: 40rem;
-  animation: fade-slide-up 0.3s ease-out forwards;
-}
-
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.55);
-}
-
-@keyframes fade-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(4rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .validation-container {
