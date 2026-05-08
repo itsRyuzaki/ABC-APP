@@ -15,7 +15,6 @@
   height: 4rem;
   object-fit: contain;
   border-radius: 50%;
-  border: 2px solid var( --abc-title-color);
 }
 
 #main-header button {

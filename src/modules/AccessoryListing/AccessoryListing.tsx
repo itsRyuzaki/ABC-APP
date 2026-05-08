@@ -42,7 +42,7 @@ const AccessoryListingComponent = () => {
           {response.data.map((itemDetail) => (
             <li
               key={itemDetail.accessoryGuid}
-              className="item rounded-2xl overflow-hidden shadow-xl w-full max-w-80 lg:max-w-96"
+              className="rounded-2xl overflow-hidden shadow-xl w-full max-w-80 lg:max-w-96"
             >
               <ItemCard
                 itemDetail={itemDetail}

@@ -1,5 +1,4 @@
 import "./ItemCard.css";
-import Button from "../../shared/Button/Button";
 import { IAccessoriesDetails } from "../../interfaces/IAccessoryModels";
 import { FC, useState } from "react";
 import { useAppSelector } from "../../store/store-hooks";
@@ -9,6 +8,7 @@ import { BLOB_PATH, IMG_UNAVAILABLE_PATH } from "../../config/endpoints";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
+import { Button } from "@mui/material";
 
 interface IItemCardComponent {
   itemDetail: IAccessoriesDetails;
@@ -16,7 +16,11 @@ interface IItemCardComponent {
   onItemAdd: () => void;
 }
 
-const ItemCard: FC<IItemCardComponent> = ({ itemDetail, onItemAdd, onItemRemove }) => {
+const ItemCard: FC<IItemCardComponent> = ({
+  itemDetail,
+  onItemAdd,
+  onItemRemove,
+}) => {
   const userRole = useAppSelector((state) => state.authorization.userRole);
   const [itemCount, setItemCount] = useState(0);
 
@@ -51,8 +55,16 @@ const ItemCard: FC<IItemCardComponent> = ({ itemDetail, onItemAdd, onItemRemove 
             <p className="item-description">{itemDetail.description}</p>
             <div className="flex items-center gap-2">
               <p className="item-price">{itemDetail.discountedPrice}</p>
-              {itemDetail.originalPrice > itemDetail.discountedPrice ? <p className="line-thorugh">{itemDetail.originalPrice}</p> : <></>}
-              {itemDetail.availableCount < 10 ? <p>Only {itemDetail.availableCount} left!</p> : <></>}
+              {itemDetail.originalPrice > itemDetail.discountedPrice ? (
+                <p className="line-thorugh">{itemDetail.originalPrice}</p>
+              ) : (
+                <></>
+              )}
+              {itemDetail.availableCount < 10 ? (
+                <p>Only {itemDetail.availableCount} left!</p>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </article>
@@ -63,7 +75,7 @@ const ItemCard: FC<IItemCardComponent> = ({ itemDetail, onItemAdd, onItemRemove 
           {userRole !== UserRole.admin ? (
             <>
               {itemCount === 0 ? (
-                <Button classOverrides={["w-full"]} onClick={handleAddCartClick}>
+                <Button className="w-full" onClick={handleAddCartClick}>
                   Add to Cart
                 </Button>
               ) : (

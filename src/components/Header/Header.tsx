@@ -1,84 +1,153 @@
-import { Link, NavLink } from "react-router-dom";
-import { BUTTON_VARIATIONS } from "../../config/variation";
-import { ROUTER_CONSTANTS } from "../../config/router-constants";
-import Button from "../../shared/Button/Button";
-import logoImg from "./../../assets/logo.jpg";
-import anonymousImg from "./../../assets/anoymous-avatar.jpg";
-
-import "./Header.css";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  Badge,
+} from "@mui/material";
+import { styled, alpha } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useAppSelector } from "../../store/store-hooks";
-import { useRef } from "react";
-import Modal from "../../shared/Modal/Modal";
-import AuthForm from "../AuthForm/AuthForm";
-import { motion } from "framer-motion";
+import Logo from "../../shared/Logo/Logo";
+import { MenuCategories } from "./MenuCategories";
+import { useNavigate } from "react-router-dom";
 
-export default function Header() {
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
+  "&:hover": {
+    border: `1px solid ${theme.palette.secondary.main}`,
+  },
+  "&:focus-within": {
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
+  marginLeft: theme.spacing(2),
+  width: "100%",
+  maxWidth: 400,
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 1.5),
+  position: "absolute",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  color: theme.palette.text.secondary,
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  width: "100%",
+  paddingLeft: "40px",
+}));
+
+const Header = () => {
   const { userData, isLoggedIn, areCredsValidated } = useAppSelector(
-    (state) => state.authorization
+    (state) => state.authorization,
   );
 
-  const authModalRef = useRef<HTMLDialogElement>(null);
-
-  const onloginClick = () => {
-    authModalRef.current?.showModal();
-  };
-
-  const closeModal = () => {
-    authModalRef.current?.close();
-  };
+  const navigate = useNavigate();
 
   return (
-    <>
-      <header id="main-header">
-        <Link to="/">
-          <div id="title">
-            <img src={logoImg} alt="Accessories But Cheaper Logo" />
-            <motion.h1
-              className="gradient-text"
-              animate={{ backgroundSize: "200%" }}
-              transition={{
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatType: "reverse",
-                duration: 1.5,
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        bgcolor: "background.default",
+        borderBottom: (theme) =>
+          `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
+      }}
+    >
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* LEFT */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <IconButton color="inherit" sx={{ display: { md: "none" } }}>
+            <MenuIcon />
+          </IconButton>
+
+          <Logo />
+        </Box>
+
+        {/* CENTER */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "center",
+            gap: 3,
+          }}
+        >
+          {/* Categories */}
+
+          {MenuCategories.map((category) => (
+            <Button
+              sx={{
+                color: "text.secondary",
+                "&:hover": {
+                  color: "text.primary",
+                  textShadow: (theme) =>
+                    `0 0 8px ${alpha(theme.palette.primary.main, 0.6)}`,
+                },
+              }}
+              key={category.route}
+              onClick={() => navigate(category.route)}
+            >
+              {category.label}
+            </Button>
+          ))}
+
+          {/* Search */}
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase placeholder="Search accessories…" />
+          </Search>
+        </Box>
+
+        {/* RIGHT */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <IconButton color="inherit" sx={{ display: { md: "none" } }}>
+            <SearchIcon />
+          </IconButton>
+
+          <IconButton color="inherit">
+            <Badge badgeContent={2} color="warning">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+
+          {isLoggedIn ? (
+            <IconButton color="inherit">
+              <AccountCircle />
+            </IconButton>
+          ) : (
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: "divider",
+                color: "text.primary",
+                "&:hover": {
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                },
               }}
             >
-              Accessories But Cheaper
-            </motion.h1>
-          </div>
-        </Link>
-        <nav className="flex gap-4">
-          <Button variation={BUTTON_VARIATIONS.textOnly}>
-            <NavLink to={ROUTER_CONSTANTS.mobiles}>Mobiles</NavLink>
-          </Button>
-          <Button variation={BUTTON_VARIATIONS.textOnly}>
-            <NavLink to={ROUTER_CONSTANTS.computersAndLaptops}>
-              Computers
-            </NavLink>
-          </Button>
-
-          {areCredsValidated ? (
-            isLoggedIn ? (
-              <Button variation={BUTTON_VARIATIONS.textOnly}>
-                <NavLink to={ROUTER_CONSTANTS.profile}>
-                  <img
-                    className="w-16 h-16 rounded-full"
-                    src={userData?.avatarUrl ?? anonymousImg}
-                    alt="User Avatar Image"
-                  />
-                </NavLink>
-              </Button>
-            ) : (
-              <Button onClick={onloginClick}>Sign In</Button>
-            )
-          ) : (
-            <></>
+              Sign In
+            </Button>
           )}
-        </nav>
-      </header>
-      <Modal ref={authModalRef}>
-        <AuthForm closeModal={closeModal} />
-      </Modal>
-    </>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
-}
+};
+
+export default Header;

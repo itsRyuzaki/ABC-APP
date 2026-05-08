@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import BaseAccesoryForm from "./BaseAccessoryForm";
 import { useRef, useState } from "react";
 import VariantAccessoryForm from "./VariantAccessoryForm";
@@ -26,7 +26,7 @@ import { useParams } from "react-router-dom";
 import { postData } from "../../../services/accessories-service";
 
 const getInitialVariantState: (
-  data?: IAccessoryVariantData
+  data?: IAccessoryVariantData,
 ) => IVariantState = (data?: IAccessoryVariantData) => ({
   isLoading: false,
   id: uuidv4(),
@@ -43,12 +43,12 @@ const AddAccessory = () => {
   >([{ key: "", value: [], id: uuidv4() }]);
   const [sellersData, setSellersData] = useFetch<ISellerDetails[]>(
     ENDPOINTS.sellers,
-    { type: ACCESSORY_TYPES[accessoryType] }
+    { type: ACCESSORY_TYPES[accessoryType] },
   );
   let accessoryBaseId: string;
 
   const cardClasses =
-    "card-wrapper p-8 shadow-lg shadow-gray-900 rounded-md abc-layout-clr mb-8";
+    "card-wrapper p-8 shadow-lg shadow-gray-900 rounded-md mb-8";
 
   const handleSubmitClick = () => {
     baseRef.current?.requestSubmit();
@@ -59,11 +59,11 @@ const AddAccessory = () => {
   };
 
   const handleBaseFormSubmit: (
-    payload: IAddAccessoryBasePayload
+    payload: IAddAccessoryBasePayload,
   ) => void = async (payload) => {
     const response = await postData<IAddAccessoryBasePayload, string>(
       ENDPOINTS.baseAccessory,
-      payload
+      payload,
     );
     if (response.success && response.data) {
       accessoryBaseId = response.data;
@@ -75,10 +75,10 @@ const AddAccessory = () => {
 
   const handleVariantFormSubmit = async (
     eventData: IAccessoryVariantEmittedData,
-    variantId: string
+    variantId: string,
   ) => {
     const formData = ExtractFormData<IAccessoryVariantData>(
-      variantRef.current[variantId]
+      variantRef.current[variantId],
     );
 
     const response = await postData<IAddAccessoryVariantPayload, number>(
@@ -104,9 +104,9 @@ const AddAccessory = () => {
             }
             return mappedData;
           },
-          {}
+          {},
         ),
-      }
+      },
     );
 
     if (response.success) {
@@ -124,22 +124,24 @@ const AddAccessory = () => {
       };
       imagesPayload.append(
         "requestPayload",
-        new File([JSON.stringify(helperPayload)], "helper.json")
+        new File([JSON.stringify(helperPayload)], "helper.json"),
       );
       eventData.imageFiles.forEach((imgFile) =>
-        imagesPayload.append("images", imgFile.file)
+        imagesPayload.append("images", imgFile.file),
       );
 
       await postData<FormData, boolean[]>(
         ENDPOINTS.accessoryImages,
-        imagesPayload
+        imagesPayload,
       );
     }
   };
 
   return (
     <div className="manage-accessory">
-      <h1 className="text-center">Add Accessory Details</h1>
+      <Typography variant="h2" className="text-center">
+        Add Accessory Details
+      </Typography>
       <h3>Base Details:</h3>
       <div className={cardClasses}>
         <BaseAccesoryForm
@@ -164,8 +166,8 @@ const AddAccessory = () => {
                     ...prevStates,
                     getInitialVariantState(
                       ExtractFormData<IAccessoryVariantData>(
-                        variantRef.current[variant.id]
-                      )
+                        variantRef.current[variant.id],
+                      ),
                     ),
                   ];
                 })
@@ -183,8 +185,8 @@ const AddAccessory = () => {
               onClick={() =>
                 setVariantStates((prevVariants) =>
                   prevVariants.filter(
-                    (prevVariant) => prevVariant.id !== variant.id
-                  )
+                    (prevVariant) => prevVariant.id !== variant.id,
+                  ),
                 )
               }
             >

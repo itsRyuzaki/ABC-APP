@@ -4,24 +4,12 @@
   gap: 2rem;
 }
 
-.item {
-  background-color: #1d1a16;
-}
-
-.item h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0.75rem 0;
-}
-
 .item-description {
   margin: 1rem;
 }
 
 .item-price {
   display: inline-block;
-  background-color: #312c1d;
-  color: var( --abc-title-color);
   font-size: 0.9rem;
   font-weight: bold;
   padding: 0.5rem 2rem;
