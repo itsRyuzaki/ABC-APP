@@ -2,10 +2,10 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import styled from "@mui/material/styles/styled";
 import { Dispatch, FC } from "react";
 import { IFileConfig } from "../../interfaces/IFileUpload";
 import { v4 as uuidv4 } from "uuid";
+import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 
 const VisuallyHiddenInput = styled("input")({
