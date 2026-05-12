@@ -102,14 +102,41 @@ export const darkTheme = createTheme({
 
   components: {
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
         body: {
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
           backgroundImage: `
-        radial-gradient(circle at 20% 20%, rgba(138,43,226,0.08), transparent 40%),
-        radial-gradient(circle at 80% 0%, rgba(0,255,136,0.06), transparent 40%)
-      `,
+              radial-gradient(circle at 20% 20%, rgba(138,43,226,0.08), transparent 40%),
+              radial-gradient(circle at 80% 0%, rgba(0,255,136,0.06), transparent 40%)
+            `,
         },
-      },
+
+        "*": {
+          scrollbarWidth: "thin",
+          scrollbarColor: `${theme.palette.grey[700]} ${theme.palette.background.default}`,
+        },
+
+        "*::-webkit-scrollbar": {
+          width: "10px",
+          height: "10px",
+        },
+
+        "*::-webkit-scrollbar-track": {
+          background: theme.palette.background.default,
+        },
+
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: theme.palette.grey[700],
+          borderRadius: "999px",
+          border: `2px solid ${theme.palette.background.default}`,
+          transition: "all 0.25s ease",
+        },
+
+        "*::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: theme.palette.primary.main,
+        },
+      }),
     },
 
     // Buttons
@@ -118,12 +145,6 @@ export const darkTheme = createTheme({
         root: {
           borderRadius: 10,
           padding: "10px 18px",
-        },
-        containedPrimary: {
-          boxShadow: "0 0 12px rgba(0,255,136,0.3)",
-          "&:hover": {
-            boxShadow: "0 0 20px rgba(0,255,136,0.5)",
-          },
         },
       },
     },

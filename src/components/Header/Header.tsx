@@ -1,12 +1,3 @@
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  Badge,
-} from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -16,6 +7,15 @@ import { useAppSelector } from "../../store/store-hooks";
 import Logo from "../../shared/Logo/Logo";
 import { MenuCategories } from "./MenuCategories";
 import { useNavigate } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Badge from "@mui/material/Badge";
+import CircularProgress from "@mui/material/CircularProgress";
+import InputBase from "@mui/material/InputBase";
+import SignInCTA from "./SignInCTA";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,6 +55,8 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const cartItems = useAppSelector((state) => state.cartDetails.items);
+
   return (
     <AppBar
       position="sticky"
@@ -65,7 +67,9 @@ const Header = () => {
           `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
       }}
     >
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar
+        sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
+      >
         {/* LEFT */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton color="inherit" sx={{ display: { md: "none" } }}>
@@ -120,29 +124,21 @@ const Header = () => {
           </IconButton>
 
           <IconButton color="inherit">
-            <Badge badgeContent={2} color="warning">
+            <Badge badgeContent={cartItems.length} color="warning" max={9}>
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
 
-          {isLoggedIn ? (
-            <IconButton color="inherit">
-              <AccountCircle />
-            </IconButton>
+          {areCredsValidated ? (
+            isLoggedIn ? (
+              <IconButton color="inherit">
+                <AccountCircle />
+              </IconButton>
+            ) : (
+              <SignInCTA />
+            )
           ) : (
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: "divider",
-                color: "text.primary",
-                "&:hover": {
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                },
-              }}
-            >
-              Sign In
-            </Button>
+            <CircularProgress aria-label="Loading…" />
           )}
         </Box>
       </Toolbar>
